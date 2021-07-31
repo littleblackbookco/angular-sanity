@@ -1,7 +1,7 @@
 [build]
   command = "npm run prerender"
   functions = "./functions"
-  publish = "dist/serverless-stripe/browser"
+  publish = "dist/frontend/browser"
 [dev]
   command = "npm run start"
   functions = "./functions"

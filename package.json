@@ -1,5 +1,5 @@
 {
-  "name": "serverless-stripe",
+  "name": "frontend",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -8,10 +8,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev:ssr": "ng run serverless-stripe:serve-ssr",
-    "serve:ssr": "node dist/serverless-stripe/server/main.js",
-    "build:ssr": "ng build --prod && ng run serverless-stripe:server:production",
-    "prerender": "ng run serverless-stripe:prerender"
+    "dev:ssr": "ng run frontend:serve-ssr",
+    "serve:ssr": "node dist/frontend/server/main.js",
+    "build:ssr": "ng build --prod && ng run frontend:server:production",
+    "prerender": "ng run frontend:prerender"
   },
   "private": true,
   "dependencies": {
