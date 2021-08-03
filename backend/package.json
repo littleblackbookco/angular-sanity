@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "@sanity/base": "^2.13.1",
+    "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/components": "^2.13.0",
     "@sanity/core": "^2.13.1",
     "@sanity/default-layout": "^2.13.1",
@@ -23,9 +24,9 @@
     "@sanity/vision": "^2.13.1",
     "prop-types": "^15.7",
     "react": "^17.0",
-    "react-dom": "^17.0"
+    "react-dom": "^17.0",
+    "sanity-plugin-mux-input": "^1.0.1"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/littleblackbookco/angular-sanity.git"
