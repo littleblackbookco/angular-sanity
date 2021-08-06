@@ -2,7 +2,13 @@ export default {
   name: "order",
   title: "Order",
   type: "object",
+  readOnly: true,
   fields: [
+    {
+      name: "title",
+      title: "Title",
+      type: "string",
+    },
     {
       name: "customer",
       title: "Customer",

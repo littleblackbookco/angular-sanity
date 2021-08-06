@@ -14,10 +14,26 @@ exports.handler = async () => {
     address: "Ladson, SC",
   };
   const createdCustomer = await sanity.create(customer);
+  const date = new Date();
+  const datetime = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+  const title = `${createdCustomer.name.trim()} ${datetime}`
+    .split(" ")
+    .join("-");
+
   const order = {
     _type: "order",
-    customer: createdCustomer._id,
-    books: ["29590594-1127-415d-9ee1-75360a1b5ed1"],
+    title,
+    customer: {
+      _type: "reference",
+      _ref: createdCustomer._id,
+    },
+    books: [
+      {
+        _type: "book",
+        _ref: "29590594-1127-415d-9ee1-75360a1b5ed1",
+        _key: "29590594-1127-415d-9ee1-75360a1b5ed1",
+      },
+    ],
     shipped: false,
   };
   const response = await sanity.create(order);
