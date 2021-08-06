@@ -3,7 +3,7 @@ const sanityClient = require("@sanity/client");
 const sanity = sanityClient({
   projectId: process.env.SANITY_PROJECT_ID,
   dataset: process.env.SANITY_DATASET,
-  useCdn: true,
+  token: process.env.SANITY_TOKEN,
 });
 
 exports.handler = async () => {
@@ -14,15 +14,13 @@ exports.handler = async () => {
     address: "Ladson, SC",
   };
   const createdCustomer = await sanity.create(customer);
-  console.log(createdCustomer);
   const order = {
     _type: "order",
     customer: createdCustomer._id,
     books: ["29590594-1127-415d-9ee1-75360a1b5ed1"],
     shipped: false,
   };
-  const response = sanity.create(order);
-  console.log(response);
+  const response = await sanity.create(order);
   return {
     statusCode: 201,
     headers: { "Content-Type": "application/json" },
