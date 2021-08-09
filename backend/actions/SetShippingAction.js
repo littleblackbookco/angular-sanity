@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDocumentOperation } from "@sanity/react-hooks";
-export function HelloWorldAction(props) {
+export function SetShippingAction(props) {
   if (props.type !== "order") {
     return null;
   }
