@@ -1,0 +1,20 @@
+.books {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.books p {
+  font-family: "Poiret One", sans-serif;
+  font-size: 40px;
+  margin: 50px;
+  text-align: center;
+}
+
+.book-item {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin: 15px;
+  min-width: 350px;
+  width: 20%;
+}

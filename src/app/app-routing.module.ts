@@ -7,9 +7,9 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
   },
   {
-    path: 'products',
+    path: 'books',
     loadChildren: () =>
-      import('./products/products.module').then((m) => m.ProductsModule),
+      import('./books/books.module').then((m) => m.BooksModule),
   },
   {
     path: 'cart',
@@ -30,9 +30,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    initialNavigation: 'enabled'
-})],
+  imports: [
+    RouterModule.forRoot(routes, {
+      initialNavigation: 'enabled',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
