@@ -8,7 +8,7 @@ const sanity = sanityClient({
 
 const createCustomer = async (customerData) => {
   const customer = {
-    _id: customerData.email.replace("@", "-").replace(".", "-"),
+    _id: customerData.email.replaceAll("@", "-").replaceAll(".", "-"),
     _type: "customer",
     name: customerData.name,
     email: customerData.email,

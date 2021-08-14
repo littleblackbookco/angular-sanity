@@ -34,5 +34,13 @@ export default {
       title: "Shipped",
       type: "boolean",
     },
+    {
+      name: "shippedOn",
+      title: "Shipped On",
+      type: "date",
+      options: {
+        dateFormat: "DD-MM-YYYY",
+      },
+    },
   ],
 };
