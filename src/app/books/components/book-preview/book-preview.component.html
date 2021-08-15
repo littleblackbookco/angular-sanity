@@ -1,5 +1,7 @@
-<img
-  *ngIf="book"
-  alt="{{ book.images[0].caption }}"
-  src="{{ book.images[0].url }}"
-/>
+<section *ngIf="book">
+  <img
+    alt="{{ book.images[0].caption }}"
+    src="{{ book.images[0].url }}?h=300&w=300"
+  />
+  <h6>{{ book.title }}</h6>
+</section>

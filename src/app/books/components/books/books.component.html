@@ -1,6 +1,10 @@
 <div class="books">
   <main class="books-list" *ngIf="books$ | async as books; else loadingBlock">
-    <app-book-preview class="book-item" *ngFor="let book of books">
+    <app-book-preview
+      class="book-item"
+      *ngFor="let book of books"
+      [book]="book"
+    >
       {{ book.title }}
     </app-book-preview>
   </main>
