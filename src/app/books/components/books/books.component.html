@@ -4,6 +4,7 @@
       class="book-item"
       *ngFor="let book of books"
       [book]="book"
+      [routerLink]="book.id"
     >
       {{ book.title }}
     </app-book-preview>
