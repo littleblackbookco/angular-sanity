@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Book } from 'src/app/models/Book';
+import { Component, OnInit } from '@angular/core';
 import { BooksQuery } from '../../state/books.query';
 
 @Component({
