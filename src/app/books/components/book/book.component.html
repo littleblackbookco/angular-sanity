@@ -1,1 +1,21 @@
-<p>Current book : {{ book$ | async | json }}</p>
+<section *ngIf="book$ | async as book">
+  <h1 class="title">{{ book.title }}</h1>
+  <section>
+    <h2>Description</h2>
+    <pre class="description" [innerHtml]="book.description"></pre>
+  </section>
+  <ul class="tags">
+    <li *ngFor="let tag of book.tags">{{ tag }}</li>
+  </ul>
+  <section class="info">
+    <h2>Product Info</h2>
+    <p class="price">Price: ${{ book.price }}</p>
+    <p class="quantity">In Stock: {{ book.quantity }}</p>
+    <p class="length">Length: {{ book.length }} in.</p>
+    <p class="width">Width: {{ book.width }} in.</p>
+    <p class="height">Height: {{ book.height }} in.</p>
+    <p class="weight">
+      Weight: {{ book.pounds }} pounds & {{ book.ounces }} ounces.
+    </p>
+  </section>
+</section>
