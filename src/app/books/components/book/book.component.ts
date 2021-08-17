@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { filterNil, filterNilValue } from '@datorama/akita';
+import { map } from 'rxjs/operators';
 import { BooksQuery } from '../../state/books.query';
 
 @Component({
@@ -8,6 +10,10 @@ import { BooksQuery } from '../../state/books.query';
 })
 export class BookComponent implements OnInit {
   book$ = this.booksQuery.currentlyViewedBook$;
+  slides$ = this.book$.pipe(
+    filterNilValue(),
+    map((book) => [...book.videos, ...book.images])
+  );
   constructor(private booksQuery: BooksQuery) {}
 
   ngOnInit(): void {}

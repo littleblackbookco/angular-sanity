@@ -4,9 +4,10 @@ import { BooksComponent } from './components/books/books.component';
 import { BookComponent } from './components/book/book.component';
 import { BooksRoutingModule } from './books-routing.module';
 import { BookPreviewComponent } from './components/book-preview/book-preview.component';
+import { CarouselModule } from '../components/carousel/carousel.module';
 
 @NgModule({
   declarations: [BooksComponent, BookComponent, BookPreviewComponent],
-  imports: [CommonModule, BooksRoutingModule],
+  imports: [CommonModule, BooksRoutingModule, CarouselModule],
 })
 export class BooksModule {}

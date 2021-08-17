@@ -1,5 +1,8 @@
 <section *ngIf="book$ | async as book">
   <h1 class="title">{{ book.title }}</h1>
+  <div class="carousel-container">
+    <app-carousel [slides]="$any(slides$ | async)"></app-carousel>
+  </div>
   <section>
     <h2>Description</h2>
     <pre class="description" [innerHtml]="book.description"></pre>

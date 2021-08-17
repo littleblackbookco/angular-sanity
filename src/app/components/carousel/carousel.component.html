@@ -1,0 +1,23 @@
+<section class="carousel">
+  <ng-container *ngFor="let slide of slides; let i = index">
+    <div *ngIf="i === currentSlide">
+      <img
+        class="slide"
+        *ngIf="isBookImage(slide); else videoSlide"
+        [src]="slide.url"
+        [alt]="slide.caption"
+        @carouselAnimation
+      />
+      <ng-template #videoSlide>
+        <div @carouselAnimation>I'm a videoSlide</div>
+      </ng-template>
+    </div>
+  </ng-container>
+
+  <button class="control prev" (click)="onPreviousClick()">
+    <span class="arrow left"></span>
+  </button>
+  <button class="control next" (click)="onNextClick()">
+    <span class="arrow right"></span>
+  </button>
+</section>
