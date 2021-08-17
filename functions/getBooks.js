@@ -1,5 +1,5 @@
-const sanityClient = require("@sanity/client");
-const blocksToHtml = require("@sanity/block-content-to-html");
+const sanityClient = require('@sanity/client');
+const blocksToHtml = require('@sanity/block-content-to-html');
 
 const sanity = sanityClient({
   projectId: process.env.SANITY_PROJECT_ID,
@@ -23,14 +23,14 @@ exports.handler = async () => {
   const books = await sanity.fetch(query).then((results) =>
     results.map((book) => ({
       ...book,
-      id: book.slug.current,
+      slug: book.slug.current,
       description: blocksToHtml({ blocks: book.description }),
     }))
   );
 
   return {
     statusCode: 200,
-    headers: { "Content-Type": "application/json" },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(books),
   };
 };

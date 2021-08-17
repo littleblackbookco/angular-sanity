@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Book } from 'src/app/models/Book';
+import { BooksQuery } from '../../state/books.query';
 
 @Component({
   selector: 'app-book',
@@ -7,9 +8,8 @@ import { Book } from 'src/app/models/Book';
   styleUrls: ['./book.component.scss'],
 })
 export class BookComponent implements OnInit {
-  @Input() book!: Book;
-
-  constructor() {}
+  book$ = this.booksQuery.currentlyViewedBook$;
+  constructor(private booksQuery: BooksQuery) {}
 
   ngOnInit(): void {}
 }
