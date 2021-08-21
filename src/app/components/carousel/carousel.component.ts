@@ -30,7 +30,7 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
   currentSlide = 0;
   player!: videojs.Player;
   slides!: any[];
-  private videoSrcBase = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+  private videoSrcBase = 'https://stream.mux.com';
 
   constructor() {}
 
@@ -38,9 +38,15 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
     this.player = videojs(this.videoRef.nativeElement.id, {
       autoplay: false,
       fluid: true,
-      sources: [{ src: this.videoSrcBase, type: 'application/x-mpegURL' }],
+      sources: [
+        {
+          src: `${this.videoSrcBase}/${this.videos[0].asset.playbackId}`,
+          type: 'application/x-mpegURL',
+        },
+      ],
     });
   }
+
   ngOnDestroy() {
     if (this.player) {
       this.player.dispose();
