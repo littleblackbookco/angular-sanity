@@ -1,14 +1,113 @@
-.title {
-  font-size: 2rem;
+$dark-gray: hsla(10, 10, 10, 0.7);
+$light-gray: hsla(0, 0, 0, 0.1);
+
+.header {
+  margin-bottom: 1rem;
+  border-left: $dark-gray 3px solid;
+  padding-left: 1rem;
 }
 
-.info {
-  font-size: 1.5rem;
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
-.carousel-container {
+.col {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.top-row {
+  // align-items: center;
+  .title {
+    // flex: 0;
+    font-size: 2.5rem;
+    // margin-bottom: 1rem;
+    // border-left: hsla(10, 10, 10, 0.7) 3px solid;
+    // padding-left: 1rem;
+    // display: inline-block;
+  }
+  .tag-container {
+    // flex: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    word-break: break-all;
+    .tag {
+      font-size: 1.25rem;
+      margin: 0 0.25rem;
+      // padding-bottom: 1rem;
+    }
+  }
+  button {
+    margin-left: auto;
+  }
+}
+
+.main-content {
+  justify-content: space-between;
+  gap: 4rem;
+
+  .carousel-container {
+    flex: 1;
+    height: 800px;
+    width: 800px;
+    background-color: $light-gray;
+  }
+
+  div.info {
+    max-width: 100%;
+    flex: 1;
+    box-shadow: 0 0 25px -15px $dark-gray;
+    padding: 1rem;
+    border-radius: 10px;
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  dl.info {
+    margin-bottom: 2rem;
+
+    div {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: $dark-gray 1px dotted;
+      padding: 0 0.5rem;
+    }
+    div:nth-child(odd) {
+      background-color: $light-gray;
+    }
+    dt,
+    dd {
+      font-size: 1.5rem;
+    }
+  }
+
+  pre.description {
+    white-space: break-spaces;
+  }
+}
+
+button.cart {
   display: block;
-  height: 500px;
-  width: 500px;
-  padding: 2em;
+  padding: 0.5em;
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgba(10, 10, 10);
+  min-width: 150px;
+  color: white;
+  border: none;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 50px;
+    background-color: red;
+  }
 }

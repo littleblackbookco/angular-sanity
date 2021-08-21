@@ -5,7 +5,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+    pathMatch: 'full',
+    redirectTo: 'books',
   },
   {
     path: 'books',
@@ -15,13 +16,6 @@ const routes: Routes = [
   {
     path: 'cart',
     loadChildren: () => import('./cart/cart.module').then((m) => m.CartModule),
-  },
-  {
-    path: 'dashboard',
-    loadChildren: () =>
-      import('./user-dashboard/user-dashboard.module').then(
-        (m) => m.UserDashboardModule
-      ),
   },
   {
     path: 'contact',

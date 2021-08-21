@@ -1,17 +1,39 @@
 <section class="carousel">
+  <video
+    #video
+    @carouselAnimation
+    class="video-js"
+    id="video-player"
+    width="100%"
+    controls
+    preload="none"
+    playsinline
+  ></video>
+
   <ng-container *ngFor="let slide of slides; let i = index">
-    <div *ngIf="i === currentSlide">
+    <div
+      class="slide-container"
+      *ngIf="i <= images.length - 1 && i === currentSlide; else videoTemplate"
+    >
       <img
         class="slide"
-        *ngIf="isBookImage(slide); else videoSlide"
-        [src]="slide.url"
-        [alt]="slide.caption"
+        [src]="images[i].url"
+        [alt]="images[i].caption"
         @carouselAnimation
       />
-      <ng-template #videoSlide>
-        <div @carouselAnimation>I'm a videoSlide</div>
-      </ng-template>
     </div>
+    <ng-template #videoTemplate>
+      <video
+        #video
+        @carouselAnimation
+        class="video-js"
+        id="video-player"
+        width="100%"
+        controls
+        preload="none"
+        playsinline
+      ></video>
+    </ng-template>
   </ng-container>
 
   <button class="control prev" (click)="onPreviousClick()">

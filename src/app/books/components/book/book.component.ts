@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { filterNil, filterNilValue } from '@datorama/akita';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { BookImage } from '../../state/book.model';
 import { BooksQuery } from '../../state/books.query';
 
 @Component({
@@ -10,9 +12,13 @@ import { BooksQuery } from '../../state/books.query';
 })
 export class BookComponent implements OnInit {
   book$ = this.booksQuery.currentlyViewedBook$;
-  slides$ = this.book$.pipe(
+  images$: Observable<BookImage[]> = this.book$.pipe(
     filterNilValue(),
-    map((book) => [...book.videos, ...book.images])
+    map((book) => book.images)
+  );
+  video$ = this.book$.pipe(
+    filterNilValue(),
+    map((book) => book.videos)
   );
   constructor(private booksQuery: BooksQuery) {}
 

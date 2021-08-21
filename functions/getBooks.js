@@ -16,7 +16,8 @@ exports.handler = async () => {
     },
     videos[] {
       asset-> {
-      'url': 'https://stream.mux.com/' + playbackId 
+      'url': 'https://stream.mux.com/' + playbackId,
+      playbackId
       }
     }
   }`;

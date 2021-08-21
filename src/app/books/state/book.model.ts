@@ -1,13 +1,28 @@
 export interface BookVideo {
   asset: {
-    url: string;
+    playbackId: string;
   };
 }
+
+export const isBookVideo = (obj: any): obj is BookVideo => {
+  obj ??= {};
+  const objIncludesAsset = Object.getOwnPropertyNames(obj).includes('asset');
+  const assetIncludesPlaybackId = Object.getOwnPropertyNames(
+    obj.asset ?? {}
+  ).includes('playbackId');
+  return objIncludesAsset && assetIncludesPlaybackId;
+};
 
 export interface BookImage {
   caption: string;
   url: string;
 }
+
+export const isBookImage = (obj: any): obj is BookImage => {
+  obj ??= {};
+  const props = Object.getOwnPropertyNames(obj);
+  return props.includes('caption') && props.includes('url');
+};
 
 export interface Book {
   id: string;
