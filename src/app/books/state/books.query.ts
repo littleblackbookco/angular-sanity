@@ -19,10 +19,10 @@ export class BooksQuery extends QueryEntity<BooksState> {
   //   })
   currentlyViewedBook$ = this.selectHasCache().pipe(
     exhaustMap((hasCache) => {
-      const books$ = hasCache ? this.selectAll() : this.booksService.get();
+      const books$ = hasCache ? this.selectAll() : this.booksService.getAll();
       return combineLatest([books$, this.routerQuery.selectParams('slug')]);
     }),
-    map(([books, slug]) => books?.find((book) => book.slug === slug)),
+    map(([books, slug]) => books?.find((book: Book) => book.slug === slug)),
     tap((book) => {
       if (book === undefined) {
         this.router.navigateByUrl('not-found');

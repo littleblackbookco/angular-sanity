@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,6 +11,7 @@ import { environment } from '../environments/environment';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import SanityClient from '@sanity/client';
 @NgModule({
   declarations: [AppComponent, NavigationComponent, NotFoundComponent],
   imports: [
@@ -22,5 +23,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AkitaNgRouterStoreModule,
   ],
   bootstrap: [AppComponent],
+  providers: [
+    {
+      provide: 'sanity',
+      useValue: SanityClient({
+        projectId: '17ck8wrl',
+        dataset: 'production',
+        useCdn: true,
+        useProjectHostname: true,
+      }),
+    },
+  ],
 })
 export class AppModule {}
