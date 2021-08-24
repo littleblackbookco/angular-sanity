@@ -1,9 +1,10 @@
 export default {
-  name: "richText",
-  type: "array",
+  name: 'richText',
+  title: 'Text Editor',
+  type: 'array',
   of: [
     {
-      type: "block",
+      type: 'block',
     },
   ],
 };

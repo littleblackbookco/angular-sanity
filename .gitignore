@@ -52,3 +52,6 @@ Thumbs.db
 # Sanity.io
 backend/node_modules/
 backend/dist
+
+# dot env files
+.env*

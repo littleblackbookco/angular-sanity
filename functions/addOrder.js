@@ -1,4 +1,4 @@
-const sanityClient = require("@sanity/client");
+const sanityClient = require('@sanity/client');
 
 const sanity = sanityClient({
   projectId: process.env.SANITY_PROJECT_ID,
@@ -8,8 +8,8 @@ const sanity = sanityClient({
 
 const createCustomer = async (customerData) => {
   const customer = {
-    _id: customerData.email.replaceAll("@", "-").replaceAll(".", "-"),
-    _type: "customer",
+    _id: customerData.email.replaceAll('@', '-').replaceAll('.', '-'),
+    _type: 'customer',
     name: customerData.name,
     email: customerData.email,
     address: customerData.address,
@@ -88,20 +88,19 @@ const validateOrder = async (books) => {
 };
 
 const createOrder = async (sanityCustomer, books) => {
-  console.log(books);
   const date = new Date();
   const datetime = `${date.toLocaleDateString()} ${date
     .toLocaleTimeString()
-    .split(" ")
-    .join("")}`;
-  const title = `${sanityCustomer.name.trim().split(" ").join("_")} ${datetime}`
-    .split(" ")
-    .join("--");
+    .split(' ')
+    .join('')}`;
+  const title = `${sanityCustomer.name.trim().split(' ').join('_')} ${datetime}`
+    .split(' ')
+    .join('--');
   const order = {
-    _type: "order",
+    _type: 'order',
     title,
     customer: {
-      _type: "reference",
+      _type: 'reference',
       _ref: sanityCustomer._id,
     },
     books: books.map((book) => ({
@@ -117,24 +116,24 @@ const createOrder = async (sanityCustomer, books) => {
 
 exports.handler = async (event) => {
   const body = JSON.parse(event.body, (key, value) => {
-    if (!key.startsWith("_") && typeof value === "string") {
+    if (!key.startsWith('_') && typeof value === 'string') {
       return value.toUpperCase();
     }
     return value;
   });
-  const { customer: customerData, books } = body;
-  const sanityCustomer = await createCustomer(customerData);
+  const { customer, books } = body;
+  const sanityCustomer = await createCustomer(customer);
   if (await validateOrder(books)) {
     const sanityOrder = await createOrder(sanityCustomer, books);
     return {
       statusCode: 201,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(sanityOrder),
     };
   }
   return {
     statusCode: 409,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: "Your order is invalid" }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'Your order is invalid' }),
   };
 };

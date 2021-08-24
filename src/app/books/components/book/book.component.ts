@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { filterNil, filterNilValue } from '@datorama/akita';
+import { filterNilValue } from '@datorama/akita';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BookImage } from '../../state/book.model';
+import { CartQuery } from 'src/app/cart/state/cart.query';
+import { CartService } from 'src/app/cart/state/cart.service';
+import { CartStore } from 'src/app/cart/state/cart.store';
+import { Book, BookImage } from '../../state/book.model';
 import { BooksQuery } from '../../state/books.query';
 
 @Component({
@@ -20,7 +23,8 @@ export class BookComponent implements OnInit {
     filterNilValue(),
     map((book) => book.videos)
   );
-  constructor(private booksQuery: BooksQuery) {}
+  cart$ = this.cartQuery.select(CartStore.ID);
+  constructor(private booksQuery: BooksQuery, private cartQuery: CartQuery) {}
 
   ngOnInit(): void {}
 }

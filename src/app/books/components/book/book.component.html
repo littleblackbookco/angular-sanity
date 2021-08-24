@@ -45,9 +45,8 @@
         <pre class="description" [innerHtml]="book.description"></pre>
       </section>
       <div class="row">
-        <span class="before-button"></span>
-        <button class="cart">Add To Cart</button>
-        <span class="after-button"></span>
+        <app-cart-input [itemId]="book.slug"></app-cart-input>
+        <app-add-to-cart [item]="book.slug"></app-add-to-cart>
       </div>
     </div>
   </div>

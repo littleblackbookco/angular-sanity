@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Book } from '../../state/book.model';
+import { take } from 'rxjs/operators';
+import { BooksQuery } from '../../state/books.query';
 import { BooksService } from '../../state/books.service';
 
 @Component({
@@ -9,11 +9,14 @@ import { BooksService } from '../../state/books.service';
   styleUrls: ['./books.component.scss'],
 })
 export class BooksComponent implements OnInit {
-  books$!: Observable<Book[]>;
+  books$ = this.booksQuery.selectAll();
 
-  constructor(private booksService: BooksService) {}
+  constructor(
+    private booksService: BooksService,
+    private booksQuery: BooksQuery
+  ) {}
 
   ngOnInit(): void {
-    this.books$ = this.booksService.get();
+    this.booksService.get().pipe(take(1)).subscribe();
   }
 }
