@@ -23,3 +23,14 @@ h2 {
   flex-direction: column;
   flex-wrap: wrap;
 }
+
+button,
+a {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  background-color: lightgray !important;
+  color: darkgray !important;
+}

@@ -33,6 +33,7 @@ export interface Book {
   ounces: number;
   pounds: number;
   price: number;
+  priceId: string;
   quantity: number;
   tags: string[];
   title: string;

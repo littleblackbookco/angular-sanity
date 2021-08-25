@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ID } from '@datorama/akita';
+import { arrayRemove, arrayUpsert, ID } from '@datorama/akita';
 import { tap } from 'rxjs/operators';
-import { Cart } from './cart.model';
+import { Cart, CartItem } from './cart.model';
 import { CartStore } from './cart.store';
 
 @Injectable({ providedIn: 'root' })
@@ -17,17 +17,15 @@ export class CartService {
     );
   }
 
-  add(item: unknown) {
-    this.cartStore.update(CartStore.ID, (cart) => ({
-      items: [...cart.items, item],
+  update(item: CartItem) {
+    this.cartStore.update(CartStore.ID, ({ items }) => ({
+      items: arrayUpsert(items, item.id, item),
     }));
   }
 
-  update(id: ID, cart: Partial<Cart>) {
-    this.cartStore.update(id, cart);
-  }
-
-  remove(id: ID) {
-    this.cartStore.remove(id);
+  remove(itemIds: string[]) {
+    this.cartStore.update(CartStore.ID, ({ items }) => ({
+      items: arrayRemove(items, itemIds),
+    }));
   }
 }

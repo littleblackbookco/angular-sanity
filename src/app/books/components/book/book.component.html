@@ -1,4 +1,4 @@
-<section *ngIf="book$ | async as book">
+<section class="container" *ngIf="book$ | async as book">
   <div class="col top-row header">
     <h1 class="title">{{ book.title }}</h1>
     <div class="tag-container">
@@ -12,42 +12,46 @@
         [videos]="book.videos"
       ></app-carousel>
     </div>
-    <div class="info">
-      <h2 class="header">Product Info</h2>
-      <dl class="info">
-        <div class="price">
-          <dt>Price</dt>
-          <dd>${{ book.price }}</dd>
-        </div>
-        <div class="quantity">
-          <dt>Quantity</dt>
-          <dd>{{ book.quantity }}</dd>
-        </div>
-        <div class="length">
-          <dt>Length</dt>
-          <dd>{{ book.length }} in.</dd>
-        </div>
-        <div class="width">
-          <dt>Width</dt>
-          <dd>{{ book.width }} in.</dd>
-        </div>
-        <div class="height">
-          <dt>Height</dt>
-          <dd>{{ book.height }} in.</dd>
-        </div>
-        <div class="weight">
-          <dt>Weight</dt>
-          <dd>{{ book.pounds }} pounds & {{ book.ounces }} ounces.</dd>
-        </div>
-      </dl>
+    <div class="info col">
+      <section>
+        <h2 class="header">Product Info</h2>
+        <dl class="info">
+          <div class="price">
+            <dt>Price</dt>
+            <dd>${{ book.price }}</dd>
+          </div>
+          <div class="quantity">
+            <dt>Quantity</dt>
+            <dd>{{ book.quantity }}</dd>
+          </div>
+          <div class="length">
+            <dt>Length</dt>
+            <dd>{{ book.length }} in.</dd>
+          </div>
+          <div class="width">
+            <dt>Width</dt>
+            <dd>{{ book.width }} in.</dd>
+          </div>
+          <div class="height">
+            <dt>Height</dt>
+            <dd>{{ book.height }} in.</dd>
+          </div>
+          <div class="weight">
+            <dt>Weight</dt>
+            <dd>{{ book.pounds }} pounds & {{ book.ounces }} ounces.</dd>
+          </div>
+        </dl>
+      </section>
       <section class="description">
         <h2 class="header">Description</h2>
         <pre class="description" [innerHtml]="book.description"></pre>
       </section>
-      <div class="row">
-        <app-cart-input [itemId]="book.slug"></app-cart-input>
-        <app-add-to-cart [item]="book.slug"></app-add-to-cart>
-      </div>
+      <app-cart-widget
+        [itemId]="book.slug"
+        [price]="book.price"
+        [priceId]="book.priceId"
+        [quantity]="book.quantity"
+      ></app-cart-widget>
     </div>
   </div>
 </section>

@@ -1,1 +1,55 @@
-<input type="number" [value]="count" />
+<div class="row">
+  <button
+    #minus
+    class="quantity minus"
+    (click)="decrease()"
+    [disabled]="input.value === 0"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 0 24 24"
+      width="24px"
+      [attr.fill]="minus.disabled ? 'darkgray' : '#FFF'"
+    >
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M19 13H5v-2h14v2z" />
+    </svg>
+  </button>
+  <div class="col">
+    <label for="quantity">Quantity</label>
+    <input
+      id="quantity"
+      class="quantity"
+      type="number"
+      [formControl]="input"
+      min="0"
+      [max]="quantity"
+      [ngClass]="input.errors ? 'error' : ''"
+    />
+    <div class="error-message" *ngIf="input.errors?.max">
+      We can see that you're excited about this product! However, we don't have
+      that many available.
+    </div>
+    <div class="error-message" *ngIf="input.errors?.min">
+      We can't give you a negative amount of this!
+    </div>
+  </div>
+  <button
+    #plus
+    class="quantity plus"
+    (click)="increase()"
+    [disabled]="input.value === quantity"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 0 24 24"
+      width="24px"
+      [attr.fill]="plus.disabled ? 'darkgray' : '#FFF'"
+    >
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+    </svg>
+  </button>
+</div>

@@ -1,6 +1,5 @@
 require('dotenv').config();
 const Stripe = require('stripe');
-// import Stripe from 'stripe';
 
 function getPackageDimensions(book) {
   const { width, height, length, pounds, ounces } = book;

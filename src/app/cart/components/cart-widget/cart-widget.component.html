@@ -1,0 +1,16 @@
+<div class="row">
+  <app-cart-input
+    #input
+    [itemId]="itemId"
+    [quantity]="quantity"
+  ></app-cart-input>
+  <button
+    class="update-cart"
+    [disabled]="
+      input.input.invalid || input.input.pristine || input.input.value === null
+    "
+    (click)="updateCart(input.input.value)"
+  >
+    Update Cart
+  </button>
+</div>
