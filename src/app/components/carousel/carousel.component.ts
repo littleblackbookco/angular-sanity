@@ -35,15 +35,16 @@ export class CarouselComponent implements OnDestroy, OnInit, AfterViewInit {
   constructor() {}
 
   ngAfterViewInit() {
+    const sources = this.videos
+      ? this.videos.map((video) => ({
+          src: `${this.videoSrcBase}/${video.asset.playbackId}`,
+          type: 'application/x-mpegURL',
+        }))
+      : [];
     this.player = videojs(this.videoRef.nativeElement.id, {
       autoplay: false,
       fluid: true,
-      sources: [
-        {
-          src: `${this.videoSrcBase}/${this.videos[0].asset.playbackId}`,
-          type: 'application/x-mpegURL',
-        },
-      ],
+      sources,
     });
   }
 
