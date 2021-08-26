@@ -1,0 +1,15 @@
+<div
+  *ngIf="item"
+  class="preview"
+  [ngClass]="{
+    animated: !!item.animated,
+    routed: !!item.route
+  }"
+  [routerLink]="item.route ?? undefined"
+>
+  <img
+    alt="{{ item.caption }}"
+    src="{{ item.url }}?h={{ item.height ?? 300 }}&w={{ item.width ?? 300 }}"
+  />
+  <p *ngIf="item.title">{{ item.title }}</p>
+</div>

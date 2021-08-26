@@ -1,13 +1,16 @@
 <main class="books-list row">
   <ng-container *ngIf="books$ | async as books; else loadingBlock">
     <div class="book-container" *ngFor="let book of books">
-      <app-book-preview
+      <app-item-preview
         class="book-item"
-        [book]="book"
-        [routerLink]="book.slug"
-      >
-      </app-book-preview>
-      <div class="shelf"></div>
+        [item]="{
+          route: '/books/' + book.slug,
+          animated: true,
+          title: book.title,
+          caption: book.images[0].caption,
+          url: book.images[0].url
+        }"
+      ></app-item-preview>
     </div>
   </ng-container>
   <ng-template #loadingBlock>

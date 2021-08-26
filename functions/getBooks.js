@@ -10,6 +10,7 @@ const sanity = sanityClient({
 exports.handler = async () => {
   const query = `*[_type=='book'] {
     ...,
+    'slug': slug.current,
     images[] {
       caption,
       'url': image.asset->url
@@ -24,7 +25,6 @@ exports.handler = async () => {
   const books = await sanity.fetch(query).then((results) =>
     results.map((book) => ({
       ...book,
-      slug: book.slug.current,
       description: blocksToHtml({ blocks: book.description }),
     }))
   );

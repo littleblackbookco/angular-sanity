@@ -6,10 +6,23 @@ import { CartComponent } from './components/cart/cart.component';
 import { CartInputComponent } from './components/cart-input/cart-input.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CartWidgetComponent } from './components/cart-widget/cart-widget.component';
+import { ItemPreviewModule } from '../components/item-preview/item-preview.module';
+import { StripeModule } from 'stripe-angular';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [CartComponent, CartInputComponent, CartWidgetComponent],
-  imports: [CommonModule, CartRoutingModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    CartRoutingModule,
+    ReactiveFormsModule,
+    ItemPreviewModule,
+    StripeModule.forRoot(
+      environment.production
+        ? ''
+        : 'pk_test_51JRHgjAxw5aEVPjYTdhWR0aiFvCusWRkSjTNKqOemP3nBvQyJC2bFnG91ARpQpzWqxu677O8wCs8WHIJQpQGmPjK00E2bpiMtU'
+    ),
+  ],
   exports: [CartWidgetComponent],
 })
 export class CartModule {}

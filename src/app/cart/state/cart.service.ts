@@ -17,7 +17,7 @@ export class CartService {
     );
   }
 
-  update(item: CartItem) {
+  update(item: Partial<CartItem> & { id: string }) {
     this.cartStore.update(CartStore.ID, ({ items }) => ({
       items: arrayUpsert(items, item.id, item),
     }));

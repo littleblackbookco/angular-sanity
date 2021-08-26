@@ -8,7 +8,8 @@ import { Book } from '../../state/book.model';
 })
 export class BookPreviewComponent implements OnInit {
   @Input() book!: Book;
-
+  @Input() height = 300;
+  @Input() width = 300;
   constructor() {}
 
   ngOnInit(): void {}

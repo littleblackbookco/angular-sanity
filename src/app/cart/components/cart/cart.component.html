@@ -1,5 +1,101 @@
-<div class="cart">
-  <h2>Your Cart</h2>
-  <p>You cart is currently empty.</p>
-  <a routerLink="/products" class="shop-button">Shop Products</a>
+<div class="row container">
+  <section class="col cart">
+    <h2>Cart</h2>
+    <div class="row" *ngFor="let book of books$ | async">
+      <app-item-preview
+        class="cell"
+        [item]="{
+          url: book.images[0].url,
+          caption: book.images[0].caption,
+          height: 100,
+          width: 100,
+          route: '/books/' + book.slug
+        }"
+      ></app-item-preview>
+      <span class="cell title">{{ book.title }}</span>
+      <span class="cell price">{{ book.price }} ea.</span>
+      <app-cart-input
+        class="cell quantity"
+        [itemId]="book.slug"
+        [quantity]="book.quantity"
+        [autoUpdateCart]="true"
+      ></app-cart-input>
+    </div>
+    <div class="total">${{ total$ | async }}.00</div>
+  </section>
+  <section class="col payment">
+    <h2>Payment Info</h2>
+    <!-- <stripe-card #stripeCard></stripe-card> -->
+    <div *ngIf="invalidError" style="color: red">
+      {{ invalidError.message }}
+    </div>
+
+    <form
+      id="payment-form"
+      [formGroup]="customerForm"
+      (submit)="payWithCard($event)"
+    >
+      <div formGroupName="contact">
+        <h3>Contact Info</h3>
+
+        <label for="name">Name: </label>
+        <input id="name" type="text" formControlName="name" />
+
+        <label for="email">Email: </label>
+        <input id="email" type="email" formControlName="email" />
+      </div>
+      <div formGroupName="address">
+        <h3>Shipping Address</h3>
+
+        <label for="street">Street: </label>
+        <input id="street" type="text" formControlName="street" />
+
+        <label for="city">City: </label>
+        <input id="city" type="text" formControlName="city" />
+
+        <label for="state">State: </label>
+        <input id="state" type="text" formControlName="state" />
+
+        <label for="zip">Zip Code: </label>
+        <input id="zip" type="text" formControlName="zip" />
+      </div>
+
+      <h3>Payment Info</h3>
+      <stripe-card
+        #stripeCard
+        (catch)="onStripeError($event)"
+        [(complete)]="cardDetailsFilledOut"
+        [(invalid)]="invalidError"
+        (cardMounted)="(cardCaptureReady)"
+        (paymentMethodChange)="setPaymentMethod($event)"
+        (tokenChange)="setStripeToken($event)"
+        (sourceChange)="setStripeSource($event)"
+      ></stripe-card>
+      <button type="submit">Pay Now</button>
+    </form>
+    <!-- <button type="button" (click)="stripeCard.createPaymentMethod({})"> -->
+    <!--   createPaymentMethod -->
+    <!-- </button> -->
+    <!-- <button type="button" (click)="stripeCard.createSource({})"> -->
+    <!--   createSource -->
+    <!-- </button> -->
+    <!-- <button type="button" (click)="stripeCard.createToken({})"> -->
+    <!--   createToken -->
+    <!-- </button> -->
+
+    <!-- <form id="payment-form"> -->
+    <!--Stripe.js injects the Card Element -->
+    <!--   <div id="card-element"></div>
+    <!--   <button id="submit"> -->
+    <!--     <div class="spinner hidden" id="spinner"></div> -->
+    <!--     <span id="button-text">Pay now</span> -->
+    <!--   </button> -->
+    <!--   <p id="card-error" role="alert"></p> -->
+    <!--   <p class="result-message hidden"> -->
+    <!--     Payment succeeded, see the result in your -->
+    <!--     <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay -->
+    <!--     again. -->
+    <!--   </p> -->
+    <!-- </form> -->
+  </section>
 </div>
