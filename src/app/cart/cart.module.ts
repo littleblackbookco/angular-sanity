@@ -9,9 +9,10 @@ import { CartWidgetComponent } from './components/cart-widget/cart-widget.compon
 import { ItemPreviewModule } from '../components/item-preview/item-preview.module';
 import { StripeModule } from 'stripe-angular';
 import { environment } from 'src/environments/environment';
+import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 
 @NgModule({
-  declarations: [CartComponent, CartInputComponent, CartWidgetComponent],
+  declarations: [CartComponent, CartInputComponent, CartWidgetComponent, PaymentSuccessComponent],
   imports: [
     CommonModule,
     CartRoutingModule,

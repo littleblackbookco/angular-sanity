@@ -28,4 +28,8 @@ export class CartService {
       items: arrayRemove(items, itemIds),
     }));
   }
+
+  clear() {
+    this.cartStore.update(CartStore.ID, () => ({ items: [] }));
+  }
 }

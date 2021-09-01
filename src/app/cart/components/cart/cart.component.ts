@@ -46,6 +46,7 @@ export class CartComponent {
   cardCaptureReady = false;
   invalidError!: any;
   cardDetailsFilledOut!: any;
+  paymentSuccess = false;
   shippingRate$!: Observable<string>;
   total$!: Observable<string>;
 
@@ -134,9 +135,11 @@ export class CartComponent {
             payment_method: { card: this.stripeCard.elements },
           })
           .then((paymentResponse) => {
-            // if (paymentResponse.error) {
-            // } else {
-            // }
+            if (paymentResponse.error) {
+              console.log(paymentResponse);
+            } else {
+              this.paymentSuccess = true;
+            }
           });
       });
   }
