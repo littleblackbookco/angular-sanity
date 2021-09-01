@@ -1,113 +1,139 @@
-<div class="row container" *ngIf="!paymentSuccess; else success">
-  <section class="col cart">
-    <h2>Cart</h2>
-    <div class="row" *ngFor="let book of books$ | async">
-      <app-item-preview
-        class="cell"
-        [item]="{
-          url: book.images[0].url,
-          caption: book.images[0].caption,
-          height: 100,
-          width: 100,
-          route: '/books/' + book.slug
-        }"
-      ></app-item-preview>
-      <div class="row cell">
-        <span class="cell title">{{ book.title }}</span>
-        <span class="cell price">${{ book.price }}.00</span>
+<ng-container *ngIf="(books$ | async)?.length; else empty">
+  <div class="row container" *ngIf="!paymentSuccess; else success">
+    <section class="col cart">
+      <h2>Cart</h2>
+      <div class="row" *ngFor="let book of books$ | async">
+        <app-item-preview
+          class="cell"
+          [item]="{
+            url: book.images[0].url,
+            caption: book.images[0].caption,
+            height: 100,
+            width: 100,
+            route: '/books/' + book.slug
+          }"
+        ></app-item-preview>
+        <div class="row cell">
+          <span class="cell title">{{ book.title }}</span>
+          <span class="cell price">${{ book.price }}.00</span>
+        </div>
+        <app-cart-input
+          class="cell quantity"
+          [itemId]="book.slug"
+          [quantity]="book.quantity"
+          [autoUpdateCart]="true"
+        ></app-cart-input>
+        <button class="cell delete" (click)="removeFromCart(book)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 0 24 24"
+            width="24px"
+            fill="#FFF"
+          >
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path
+              d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"
+            />
+          </svg>
+        </button>
       </div>
-      <app-cart-input
-        class="cell quantity"
-        [itemId]="book.slug"
-        [quantity]="book.quantity"
-        [autoUpdateCart]="true"
-      ></app-cart-input>
-    </div>
-    <div class="total">Cart Total: ${{ cartTotal$ | async }}.00</div>
-    <div>Tax and shipping will be calculated when ready to checkout.</div>
-    <div class="confirm-checkout col" *ngIf="!displayCheckout">
-      <h3>Ready To Checkout?</h3>
-      <button class="primary" (click)="showCheckout()">Yes!</button>
-      <button class="secondary" routerLink="/books">No, View More Books</button>
-    </div>
-  </section>
-
-  <section class="col checkout slide-in" *ngIf="displayCheckout">
-    <h2>Checkout</h2>
-    <!-- <stripe-card #stripeCard></stripe-card> -->
-    <div *ngIf="invalidError" style="color: red">
-      {{ invalidError.message }}
-    </div>
-
-    <form [formGroup]="customerForm">
-      <fieldset formGroupName="contact">
-        <legend>Contact Info</legend>
-
-        <label for="name">Name: </label>
-        <input id="name" type="text" formControlName="name" />
-
-        <label for="email">Email: </label>
-        <input id="email" type="email" formControlName="email" />
-      </fieldset>
-      <fieldset formGroupName="address">
-        <legend>Shipping Address</legend>
-
-        <label for="street">Street: </label>
-        <input id="street" type="text" formControlName="street" />
-
-        <label for="city">City: </label>
-        <input id="city" type="text" formControlName="city" />
-
-        <label for="state">State: </label>
-        <input id="state" type="text" formControlName="state" />
-
-        <label for="zip">Zip Code: </label>
-        <input id="zip" type="text" formControlName="zip" />
-      </fieldset>
-      <button
-        *ngIf="!(total$ | async)"
-        class="primary centered"
-        (click)="getShippingRate($event)"
-      >
-        Next
-      </button>
-    </form>
-    <div *ngIf="total$ | async as total" class="slide-in card-form-container">
-      <ng-container *ngIf="shippingRate$ | async as shipping">
-        <div class="row">
-          <span class="label">Cart Total:</span>
-          <span class="amount">${{ cartTotal$ | async }}.00</span>
-        </div>
-        <div class="row">
-          <span class="label">Shipping:</span>
-          <span class="amount">${{ shipping }}</span>
-        </div>
-        <div class="row">
-          <span class="label">Total:</span>
-          <span class="amount">${{ total }}</span>
+      <ng-container *ngIf="(cartTotal$ | async) !== 0; else empty">
+        <div class="total">Cart Total: ${{ cartTotal$ | async }}.00</div>
+        <div>Tax and shipping will be calculated when ready to checkout.</div>
+        <div class="confirm-checkout col" *ngIf="!displayCheckout">
+          <h3>Ready To Checkout?</h3>
+          <button class="primary" (click)="showCheckout()">Yes!</button>
+          <button class="secondary" routerLink="/books">
+            No, View More Books
+          </button>
         </div>
       </ng-container>
-      <form [formGroup]="customerForm" (submit)="payWithCard($event)">
-        <fieldset>
-          <legend>Card Info</legend>
-          <stripe-card
-            #stripeCard
-            (catch)="onStripeError($event)"
-            [(complete)]="cardDetailsFilledOut"
-            [(invalid)]="invalidError"
-            (cardMounted)="(cardCaptureReady)"
-            (paymentMethodChange)="setPaymentMethod($event)"
-            (tokenChange)="setStripeToken($event)"
-            (sourceChange)="setStripeSource($event)"
-          ></stripe-card>
+    </section>
+
+    <section
+      class="col checkout slide-in"
+      *ngIf="displayCheckout && (cartTotal$ | async) !== 0"
+    >
+      <h2>Checkout</h2>
+      <div *ngIf="invalidError" style="color: red">
+        {{ invalidError.message }}
+      </div>
+
+      <form [formGroup]="customerForm">
+        <fieldset formGroupName="contact">
+          <legend>Contact Info</legend>
+
+          <label for="name">Name: </label>
+          <input id="name" type="text" formControlName="name" />
+
+          <label for="email">Email: </label>
+          <input id="email" type="email" formControlName="email" />
         </fieldset>
-        <button id="pay-now" class="primary centered" type="submit">
-          Pay Now
+        <fieldset formGroupName="address">
+          <legend>Shipping Address</legend>
+
+          <label for="street">Street: </label>
+          <input id="street" type="text" formControlName="street" />
+
+          <label for="city">City: </label>
+          <input id="city" type="text" formControlName="city" />
+
+          <label for="state">State: </label>
+          <input id="state" type="text" formControlName="state" />
+
+          <label for="zip">Zip Code: </label>
+          <input id="zip" type="text" formControlName="zip" />
+        </fieldset>
+        <button
+          *ngIf="!(total$ | async)"
+          class="primary centered"
+          (click)="getShippingRate($event)"
+        >
+          Next
         </button>
       </form>
-    </div>
-  </section>
-</div>
+      <div *ngIf="total$ | async as total" class="slide-in card-form-container">
+        <ng-container *ngIf="shippingRate$ | async as shipping">
+          <div class="row">
+            <span class="label">Cart Total:</span>
+            <span class="amount">${{ cartTotal$ | async }}.00</span>
+          </div>
+          <div class="row">
+            <span class="label">Shipping:</span>
+            <span class="amount">${{ shipping }}</span>
+          </div>
+          <div class="row">
+            <span class="label">Total:</span>
+            <span class="amount">${{ total }}</span>
+          </div>
+        </ng-container>
+        <form [formGroup]="customerForm" (submit)="payWithCard($event)">
+          <fieldset>
+            <legend>Card Info</legend>
+            <stripe-card
+              #stripeCard
+              (catch)="onStripeError($event)"
+              [(complete)]="cardDetailsFilledOut"
+              [(invalid)]="invalidError"
+              (cardMounted)="(cardCaptureReady)"
+              (paymentMethodChange)="setPaymentMethod($event)"
+              (tokenChange)="setStripeToken($event)"
+              (sourceChange)="setStripeSource($event)"
+            ></stripe-card>
+          </fieldset>
+          <button id="pay-now" class="primary centered" type="submit">
+            Pay Now
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+</ng-container>
+
+<ng-template #empty>
+  <app-cart-empty></app-cart-empty>
+</ng-template>
 
 <ng-template #success>
   <app-payment-success></app-payment-success>

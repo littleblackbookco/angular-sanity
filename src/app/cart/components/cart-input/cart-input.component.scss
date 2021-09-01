@@ -7,15 +7,10 @@
 .col {
   flex: 1;
   flex-wrap: nowrap;
-  // max-width: 300px;
 }
 
 label {
   font-weight: bold;
-}
-
-.quantity {
-  // display: inline;
 }
 
 button.quantity {
@@ -28,24 +23,13 @@ button.quantity {
   svg {
     padding-top: 25%;
   }
-  // &:disabled {
-  //   svg {
-  //     fill: lightgrey;
-  //   }
-  // }
-  // font-weight: bolder;
-  // font-size: 1.25rem;
-  // display: inline-block;
 }
 
 input.quantity {
   height: 100%;
   border-radius: 5px;
-  // display: inline-block;
-  // flex: 1;
   border: 1px solid black;
   font-size: 1.25rem;
-  // width: 100%;
 }
 
 .error {

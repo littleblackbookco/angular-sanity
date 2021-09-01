@@ -10,6 +10,8 @@ import { CartStore } from '../../state/cart.store';
 import { Customer } from 'src/app/models/Customer';
 import { Order } from 'src/app/models/Order';
 import { combineLatest, Observable } from 'rxjs';
+import { Book } from 'src/app/books/state/book.model';
+import { CartService } from '../../state/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -53,6 +55,7 @@ export class CartComponent {
   constructor(
     private fb: FormBuilder,
     private cartQuery: CartQuery,
+    private cartService: CartService,
     private booksQuery: BooksQuery,
     private http: HttpClient
   ) {}
@@ -116,6 +119,14 @@ export class CartComponent {
         return `${dollars}.${cents}`;
       })
     );
+  }
+
+  removeFromCart(book: Book) {
+    if (
+      confirm(`Are you sure you want to remove ${book.title} from your cart?`)
+    ) {
+      this.cartService.remove([book.slug]);
+    }
   }
 
   payWithCard(event: Event) {

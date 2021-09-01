@@ -38,6 +38,19 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
         }
       }
       flex: 1 0 auto;
+
+      &.delete {
+        border: none;
+        max-height: 2rem;
+        margin-top: 22px;
+        margin-left: 1rem;
+        border-radius: 25%;
+        background-color: rgb(180, 20, 20);
+        flex: 0 0 auto;
+        svg {
+          padding-top: 20%;
+        }
+      }
     }
     app-cart-input {
       flex: 1 0 auto;
@@ -56,6 +69,10 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
     padding: 1rem 0;
     font-size: 1.5rem;
     font-weight: bold;
+  }
+
+  .total ~ div {
+    margin-bottom: 2rem;
   }
 }
 
