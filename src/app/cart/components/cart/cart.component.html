@@ -12,8 +12,10 @@
           route: '/books/' + book.slug
         }"
       ></app-item-preview>
-      <span class="cell title">{{ book.title }}</span>
-      <span class="cell price">{{ book.price }} ea.</span>
+      <div class="row cell">
+        <span class="cell title">{{ book.title }}</span>
+        <span class="cell price">${{ book.price }}.00</span>
+      </div>
       <app-cart-input
         class="cell quantity"
         [itemId]="book.slug"
@@ -21,31 +23,34 @@
         [autoUpdateCart]="true"
       ></app-cart-input>
     </div>
-    <div class="total">${{ total$ | async }}.00</div>
+    <div class="total">Cart Total: ${{ cartTotal$ | async }}.00</div>
+    <div>Tax and shipping will be calculated when ready to checkout.</div>
+    <div class="confirm-checkout col" *ngIf="!displayCheckout">
+      <h3>Ready To Checkout?</h3>
+      <button class="primary" (click)="showCheckout()">Yes!</button>
+      <button class="secondary" routerLink="/books">No, View More Books</button>
+    </div>
   </section>
-  <section class="col payment">
-    <h2>Payment Info</h2>
+
+  <section class="col checkout slide-in" *ngIf="displayCheckout">
+    <h2>Checkout</h2>
     <!-- <stripe-card #stripeCard></stripe-card> -->
     <div *ngIf="invalidError" style="color: red">
       {{ invalidError.message }}
     </div>
 
-    <form
-      id="payment-form"
-      [formGroup]="customerForm"
-      (submit)="payWithCard($event)"
-    >
-      <div formGroupName="contact">
-        <h3>Contact Info</h3>
+    <form [formGroup]="customerForm">
+      <fieldset formGroupName="contact">
+        <legend>Contact Info</legend>
 
         <label for="name">Name: </label>
         <input id="name" type="text" formControlName="name" />
 
         <label for="email">Email: </label>
         <input id="email" type="email" formControlName="email" />
-      </div>
-      <div formGroupName="address">
-        <h3>Shipping Address</h3>
+      </fieldset>
+      <fieldset formGroupName="address">
+        <legend>Shipping Address</legend>
 
         <label for="street">Street: </label>
         <input id="street" type="text" formControlName="street" />
@@ -58,21 +63,49 @@
 
         <label for="zip">Zip Code: </label>
         <input id="zip" type="text" formControlName="zip" />
-      </div>
-
-      <h3>Payment Info</h3>
-      <stripe-card
-        #stripeCard
-        (catch)="onStripeError($event)"
-        [(complete)]="cardDetailsFilledOut"
-        [(invalid)]="invalidError"
-        (cardMounted)="(cardCaptureReady)"
-        (paymentMethodChange)="setPaymentMethod($event)"
-        (tokenChange)="setStripeToken($event)"
-        (sourceChange)="setStripeSource($event)"
-      ></stripe-card>
-      <button type="submit">Pay Now</button>
+      </fieldset>
+      <button
+        *ngIf="!(total$ | async)"
+        class="primary centered"
+        (click)="getShippingRate($event)"
+      >
+        Next
+      </button>
     </form>
+    <div *ngIf="total$ | async as total" class="slide-in card-form-container">
+      <ng-container *ngIf="shippingRate$ | async as shipping">
+        <div class="row">
+          <span class="label">Cart Total:</span>
+          <span class="amount">${{ cartTotal$ | async }}.00</span>
+        </div>
+        <div class="row">
+          <span class="label">Shipping:</span>
+          <span class="amount">${{ shipping }}</span>
+        </div>
+        <div class="row">
+          <span class="label">Total:</span>
+          <span class="amount">${{ total }}</span>
+        </div>
+      </ng-container>
+      <form [formGroup]="customerForm" (submit)="payWithCard($event)">
+        <fieldset>
+          <legend>Card Info</legend>
+          <stripe-card
+            #stripeCard
+            (catch)="onStripeError($event)"
+            [(complete)]="cardDetailsFilledOut"
+            [(invalid)]="invalidError"
+            (cardMounted)="(cardCaptureReady)"
+            (paymentMethodChange)="setPaymentMethod($event)"
+            (tokenChange)="setStripeToken($event)"
+            (sourceChange)="setStripeSource($event)"
+          ></stripe-card>
+        </fieldset>
+        <button id="pay-now" class="primary centered" type="submit">
+          Pay Now
+        </button>
+      </form>
+    </div>
     <!-- <button type="button" (click)="stripeCard.createPaymentMethod({})"> -->
     <!--   createPaymentMethod -->
     <!-- </button> -->

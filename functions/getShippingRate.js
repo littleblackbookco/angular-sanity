@@ -32,7 +32,6 @@ exports.PostalService = class PostalService {
       });
       response.body.on('end', () => {
         const uspsObj = this._xmlToObj(buffer.join(''));
-        console.log(uspsObj);
         const shippingRate = uspsObj.RateV4Response.Package.Postage.Rate;
         return cb(shippingRate);
       });
@@ -72,11 +71,11 @@ exports.PostalService = class PostalService {
 
   _orderToPackage(order) {
     const pounds = order.books.reduce(
-      (pounds, book) => pounds + book.pounds,
+      (pounds, book) => pounds + book.pounds * book.quantity,
       0
     );
     const ounces = order.books.reduce(
-      (ounces, book) => ounces + book.ounces,
+      (ounces, book) => ounces + book.ounces * book.quantity,
       0
     );
     const length = order.books.reduce(
@@ -114,6 +113,34 @@ exports.PostalService = class PostalService {
 };
 
 exports.handler = async (req) => {
+  try {
+    const order = JSON.parse(req.body);
+    const shippingRate = await new Promise((resolve, reject) => {
+      try {
+        const postalService = new this.PostalService();
+        postalService.getShippingRate(
+          {
+            zipDestination: order.customer.address.zip,
+            books: order.books,
+          },
+          (shippingRate) => resolve(shippingRate)
+        );
+      } catch (e) {
+        reject(e.message);
+      }
+    });
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ shippingRate }),
+    };
+  } catch (e) {
+    return {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: e }),
+    };
+  }
   // const order = JSON.parse(req.body);
   // const postalService = new PostalService();
   // const shippingRate = await postalService.getShippingRate(order);

@@ -1,19 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { StripeError, Token } from '@stripe/stripe-js';
-import { map, switchMap } from 'rxjs/operators';
+import { Component, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { StripeError } from '@stripe/stripe-js';
+import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
 import { BooksQuery } from 'src/app/books/state/books.query';
 import { StripeCard } from 'stripe-angular';
 import { CartQuery } from '../../state/cart.query';
 import { CartStore } from '../../state/cart.store';
+import { Customer } from 'src/app/models/Customer';
+import { Order } from 'src/app/models/Order';
+import { combineLatest, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
 })
-export class CartComponent implements OnInit {
+export class CartComponent {
   @ViewChild('stripeCard', { read: StripeCard }) stripeCard!: StripeCard;
   customerForm = this.fb.group({
     contact: this.fb.group({
@@ -34,14 +37,18 @@ export class CartComponent implements OnInit {
       })
     )
   );
-  total$ = this.cartQuery.items$.pipe(
+  cartTotal$ = this.cartQuery.items$.pipe(
     map((items) =>
       items.reduce((total, item) => total + item.price * item.quantity, 0)
     )
   );
+  displayCheckout = false;
   cardCaptureReady = false;
   invalidError!: any;
   cardDetailsFilledOut!: any;
+  shippingRate$!: Observable<string>;
+  total$!: Observable<string>;
+
   constructor(
     private fb: FormBuilder,
     private cartQuery: CartQuery,
@@ -49,7 +56,67 @@ export class CartComponent implements OnInit {
     private http: HttpClient
   ) {}
 
-  ngOnInit() {}
+  getShippingRate(event: Event) {
+    event.preventDefault();
+
+    const order$ = this.cartQuery.selectEntity(CartStore.ID).pipe(
+      map((cart) => {
+        const bookIds = cart?.items.map((item) => item.id);
+        const books = this.booksQuery
+          .getAll({
+            filterBy: (book) => !!bookIds?.find((slug) => slug === book.slug),
+          })
+          .map((book) => {
+            const cartItem = cart?.items.find((item) => item.id === book.slug);
+            const quantity = cartItem?.quantity ?? book.quantity;
+            return { ...book, quantity };
+          });
+
+        const customer: Customer = {
+          email: this.customerForm.get('contact.email')?.value,
+          name: this.customerForm.get('contact.name')?.value,
+          address: this.customerForm.get('address')?.value,
+        };
+        const order: Order = {
+          customer,
+          books,
+        };
+        return order;
+      })
+    );
+
+    this.shippingRate$ = order$.pipe(
+      debounceTime(250),
+      switchMap((order) =>
+        this.http
+          .post<{ shippingRate: number }>(
+            '/.netlify/functions/getShippingRate',
+            order
+          )
+          .pipe(
+            map((response) => response.shippingRate),
+            map((shippingRate) => {
+              const dollars = +`${shippingRate}`.split('.')[0];
+              const cents = Math.floor((shippingRate * 100) % 100);
+              return `${dollars}.${cents}`;
+            })
+          )
+      ),
+      shareReplay()
+    );
+
+    this.total$ = combineLatest([this.cartTotal$, this.shippingRate$]).pipe(
+      map((values) => {
+        const [cartTotal, shippingRate] = values;
+        const shippingTotal = +shippingRate;
+        const total = cartTotal + shippingTotal;
+        const dollars = +`${total}`.split('.')[0];
+        const cents = Math.floor((total * 100) % 100);
+        return `${dollars}.${cents}`;
+      })
+    );
+  }
+
   payWithCard(event: Event) {
     event.preventDefault();
     const cart = this.cartQuery.getEntity(CartStore.ID);
@@ -62,22 +129,22 @@ export class CartComponent implements OnInit {
     this.http
       .post('/.netlify/functions/createPaymentIntent', order)
       .subscribe((response: any) => {
-        console.log('createPaymentIntent', response);
-        // this.stripeCard.token = response.clientSecret;
         this.stripeCard.stripe
           .confirmCardPayment(response.clientSecret, {
             payment_method: { card: this.stripeCard.elements },
           })
           .then((paymentResponse) => {
-            console.log('paymentResponse', paymentResponse);
             // if (paymentResponse.error) {
-
             // } else {
-
             // }
           });
       });
   }
+
+  showCheckout() {
+    this.displayCheckout = true;
+  }
+
   onStripeInvalid(error: StripeError) {
     console.log('Validation Error', error);
   }

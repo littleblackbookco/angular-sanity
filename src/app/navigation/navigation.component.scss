@@ -12,47 +12,79 @@ header {
 }
 header .logo {
   font-family: 'Poiret One', sans-serif;
-  font-size: 70px;
+  font-size: clamp(3rem, 1rem, 5rem);
   margin: 20px;
   text-align: center;
 }
 nav {
   border-bottom: 1px solid black;
   border-top: 1px solid black;
-  margin: 0 auto;
+  gap: 1rem;
+  // margin: 0 auto;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  padding: 0 1rem;
+  a {
+    max-width: 5rem;
+    text-align: center;
+    color: black;
+    flex: 1 1 auto;
+    padding: 0 5px;
+    // display: inline-block;
+    font-family: 'Poiret One', sans-serif;
+    font-size: 25px;
+    // height: 40px;
+    // padding-top: 5px;
+    text-decoration: none;
+    text-transform: lowercase;
+    // width: 18%;
+    &.active {
+      background-color: linen;
+    }
+    &:hover {
+      background-color: rgba(20, 20, 20, 0.2);
+    }
+    &:visited {
+      color: black;
+    }
+  }
 }
 
-nav ul {
-  display: block;
-  list-style: none;
-  text-align: center;
-}
+// nav ul {
+//   display: flex;
+//   justify-content: space-around;
+//   list-style: none;
+//   text-align: center;
+// }
 
-nav ul li {
-  display: inline;
-  text-decoration: none;
-}
+// nav ul li {
+//   flex: 1;
+//   // display: inline;
+//   text-decoration: none;
+// }
 
-nav a {
-  color: black;
-  display: inline-block;
-  font-family: 'Poiret One', sans-serif;
-  font-size: 25px;
-  height: 40px;
-  padding-top: 5px;
-  text-decoration: none;
-  text-transform: lowercase;
-  width: 18%;
-}
+// nav a {
+//   color: black;
+//   // display: inline-block;
+//   font-family: 'Poiret One', sans-serif;
+//   font-size: 25px;
+//   // height: 40px;
+//   padding-top: 5px;
+//   text-decoration: none;
+//   text-transform: lowercase;
+//   // width: 18%;
+// }
 
-nav a:hover {
-  background-color: rgba(20, 20, 20, 0.2);
-}
+// nav a:hover {
+//   background-color: rgba(20, 20, 20, 0.2);
+// }
 
-nav a.active {
-  background-color: linen;
-}
+// nav a.active {
+//   background-color: linen;
+// }
 
-nav a:visited {
-  color: black;
-}
+// nav a:visited {
+//   color: black;
+// }
