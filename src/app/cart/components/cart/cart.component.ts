@@ -62,7 +62,7 @@ export class CartComponent {
 
   getShippingRate(event: Event) {
     event.preventDefault();
-
+    console.log(this.customerForm.value);
     const order$ = this.cartQuery.selectEntity(CartStore.ID).pipe(
       map((cart) => {
         const bookIds = cart?.items.map((item) => item.id);
@@ -136,8 +136,8 @@ export class CartComponent {
       id: item.id,
       quantity: item.quantity,
     }));
-    const zipDestination = this.customerForm.get('address.zip')?.value;
-    const order = { zipDestination, items };
+    // const zipDestination = this.customerForm.get('address.zip')?.value;
+    const order = { customer: this.customerForm.value, items };
     this.http
       .post('/.netlify/functions/createPaymentIntent', order)
       .subscribe((response: any) => {

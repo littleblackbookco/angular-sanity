@@ -1,7 +1,5 @@
 const parser = require('fast-xml-parser');
 const fetch = require('node-fetch');
-const https = require('https');
-const zlib = require('zlib');
 const qs = require('querystring');
 
 exports.PostalService = class PostalService {
@@ -14,17 +12,10 @@ exports.PostalService = class PostalService {
   getShippingRate(order, cb) {
     const pkg = this._orderToPackage(order);
     const xml = this._rateXml(pkg).trim();
-    // const params = new HttpParams().set('API', 'RateV4').set('XML', xml);
     const params = qs.stringify({ API: 'RateV4', XML: xml });
-    // return https.get({ url: `${this.url}?${params}` }, (response) => {
-    //   console.log(response);
-    //   const uspsObj = this._xmlToObj(response.body);
-    //   const shippingRate = uspsObj.RateV4Response.Package.Postage.Rate;
-    //   return shippingRate;
-    // });
+
     return fetch(`${this.url}?${params}`, {
       responseType: 'text',
-      // params: { API: 'RateV4', XML: xml },
     }).then((response) => {
       const buffer = [];
       response.body.on('data', (data) => {
@@ -36,18 +27,6 @@ exports.PostalService = class PostalService {
         return cb(shippingRate);
       });
     });
-    // return this.http
-    //   .get(this.url, {
-    //     responseType: 'text',
-    //     params,
-    //   })
-    // .pipe(
-    //   map((xmlResponse) => {
-    //     const uspsObj = this._xmlToObj(xmlResponse);
-    //     const shippingRate = uspsObj.RateV4Response.Package.Postage.Rate;
-    //     return shippingRate;
-    //   })
-    // )
   }
 
   _rateXml(pkg) {
@@ -141,12 +120,4 @@ exports.handler = async (req) => {
       body: JSON.stringify({ error: e }),
     };
   }
-  // const order = JSON.parse(req.body);
-  // const postalService = new PostalService();
-  // const shippingRate = await postalService.getShippingRate(order);
-  // return {
-  //   statusCode: 200,
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ shippingRate }),
-  // };
 };

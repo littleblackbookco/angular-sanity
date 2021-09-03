@@ -1,4 +1,5 @@
 const sanityClient = require('@sanity/client');
+const stripe = require('stripe');
 
 const sanity = sanityClient({
   projectId: process.env.SANITY_PROJECT_ID,
@@ -6,7 +7,7 @@ const sanity = sanityClient({
   token: process.env.SANITY_TOKEN,
 });
 
-const createCustomer = async (customerData) => {
+const createCustomer = async (customerData, sanity = sanity) => {
   const customer = {
     _id: customerData.email.replaceAll('@', '-').replaceAll('.', '-'),
     _type: 'customer',
@@ -113,27 +114,58 @@ const createOrder = async (sanityCustomer, books) => {
   const response = await sanity.create(order);
   return response;
 };
-
-exports.handler = async (event) => {
-  const body = JSON.parse(event.body, (key, value) => {
-    if (!key.startsWith('_') && typeof value === 'string') {
-      return value.toUpperCase();
-    }
-    return value;
-  });
-  const { customer, books } = body;
-  const sanityCustomer = await createCustomer(customer);
-  if (await validateOrder(books)) {
-    const sanityOrder = await createOrder(sanityCustomer, books);
+exports.createCustomer = createCustomer;
+exports.handler = async (req) => {
+  let event;
+  const sig = req.headers['stripe-signature'];
+  // This is your Stripe CLI webhook secret for testing your endpoint locally.
+  const endpointSecret = 'whsec_iZcOSTXbIkFGVqqAzQnacvg9Pkdb36XX';
+  try {
+    const body = JSON.parse(req.body);
+    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+  } catch (e) {
     return {
-      statusCode: 201,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(sanityOrder),
+      statusCode: 400,
+      body: `Webhook Error: ${e.message}`,
     };
   }
+
+  // Handle the event
+  switch (event.type) {
+    case 'payment_intent.succeeded':
+      const paymentIntent = event.data.object;
+      console.log(paymentIntent);
+      // Then define and call a function to handle the event payment_intent.succeeded
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
   return {
-    statusCode: 409,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: 'Your order is invalid' }),
+    statusCode: 200,
   };
 };
+// exports.handler = async (event) => {
+//   const body = JSON.parse(event.body, (key, value) => {
+//     if (!key.startsWith('_') && typeof value === 'string') {
+//       return value.toUpperCase();
+//     }
+//     return value;
+//   });
+//   const { customer, books } = body;
+//   const sanityCustomer = await createCustomer(customer);
+//   if (await validateOrder(books)) {
+//     const sanityOrder = await createOrder(sanityCustomer, books);
+//     return {
+//       statusCode: 201,
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify(sanityOrder),
+//     };
+//   }
+//   return {
+//     statusCode: 409,
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify({ message: 'Your order is invalid' }),
+//   };
+// };

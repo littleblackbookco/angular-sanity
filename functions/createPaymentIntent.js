@@ -1,14 +1,16 @@
 const sanityClient = require('@sanity/client');
 const { PostalService } = require('./getShippingRate');
+const { createCustomer } = require('./addOrder');
+
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
 const sanity = sanityClient({
   projectId: process.env.SANITY_PROJECT_ID,
   dataset: process.env.SANITY_DATASET,
-  useCdn: true,
+  token: process.env.SANITY_TOKEN,
 });
 
-function calculateOrderTotal(order) {
+const calculateOrderTotal = (order) => {
   let amount = 0;
   for (const item of order) {
     if (item.quantity > item.available) {
@@ -19,9 +21,9 @@ function calculateOrderTotal(order) {
     amount = amount + item.price * item.quantity;
   }
   return amount;
-}
+};
 
-async function getFromSanity(order) {
+const getFromSanity = async (order) => {
   const ids = order.map((item) => `"${item.id}"`);
   const query = `*[_type=='book' && slug.current in [${ids}]] {
     'slug': slug.current,
@@ -39,60 +41,60 @@ async function getFromSanity(order) {
       return { ...book, quantity: item.quantity, available: book.quantity };
     })
   );
+};
+
+async function createPayment(email, paymentId, amount) {
+  const payment = {
+    _type: 'payment',
+    customerId: email.replaceAll('@', '-').replaceAll('.', '-'),
+    paymentId,
+    amount,
+    paid: false,
+  };
+  return await sanity.create(payment);
 }
 
-// function validateOrder(order, books) {
-//   return books.map((book) => {
-//     const item = order.find((item) => item.id === book.slug);
-//     return {...book, quantity: item.quantity, available: book.quantity}
-//   })
-// }
-
 exports.handler = async (req) => {
-  /** {zipDestination: string, items: { id: string, quantity: number}[]} */
   try {
+    /**
+     * {
+     *   customer: { contact: {}, address: {} },
+     *   items: { id: string, quantity: number}[]
+     * }
+     */
     const data = JSON.parse(req.body);
-    const books = await getFromSanity(data.items);
+    const { customer, items } = data;
+    const books = await getFromSanity(items);
     const orderTotal = calculateOrderTotal(books);
     const postalService = new PostalService();
-    // let shippingRate = 0;
     const shippingRate = await new Promise((resolve, reject) => {
       try {
         postalService.getShippingRate(
           {
-            zipDestination: data.zipDestination,
+            zipDestination: customer.address.zip,
             books,
           },
           (shippingRate) => resolve(shippingRate)
         );
       } catch (e) {
-        reject(e.message);
+        reject(e);
       }
     });
-    console.log('shippingRate', shippingRate);
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.ceil((orderTotal + shippingRate) * 100),
       currency: 'usd',
     });
+    await createPayment(
+      customer.contact.email,
+      paymentIntent.id,
+      paymentIntent.amount
+    );
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ clientSecret: paymentIntent.client_secret }),
     };
-
-    // console.log('wat', wat);
-    // console.log('shippingRate', shippingRate);
-    // const paymentIntent = await stripe.paymentIntents.create({
-    //   amount: orderTotal + shippingRate,
-    //   currency: 'usd',
-    // });
-    // return {
-    //   statusCode: 200,
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ clientSecret: paymentIntent.client_secret }),
-    // };
   } catch (e) {
-    console.log(e);
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
