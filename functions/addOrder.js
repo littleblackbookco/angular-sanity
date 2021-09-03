@@ -121,8 +121,7 @@ exports.handler = async (req) => {
   // This is your Stripe CLI webhook secret for testing your endpoint locally.
   const endpointSecret = 'whsec_iZcOSTXbIkFGVqqAzQnacvg9Pkdb36XX';
   try {
-    const body = JSON.parse(req.body);
-    event = stripe.webhooks.constructEvent(body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (e) {
     return {
       statusCode: 400,
