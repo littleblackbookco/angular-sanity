@@ -97,17 +97,39 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
     fieldset {
       padding: 1rem;
       margin: 1rem 0;
+      background-color: #fefefe;
+      box-shadow: 7px 7px 0px 0px black;
+      border: 1px solid black;
+      legend {
+        background-color: black;
+        color: white;
+        padding: 0 0.5rem;
+      }
     }
     label {
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
     }
     input {
       display: inline-flex;
       border: 1px solid black;
       width: -webkit-fill-available;
       padding-left: 0.5rem;
-      margin-bottom: 1rem;
+      &.ng-invalid {
+        border: 1px solid red;
+      }
+      &[disabled] {
+        cursor: not-allowed;
+        // !important is needed to override inputs filled by browser autoselect
+        background-color: #ededed !important;
+      }
+    }
+
+    .input-error {
+      border-left: 2px solid red;
+      color: red;
+      padding-left: 0.25rem;
+      margin-top: 0.25rem;
     }
   }
 

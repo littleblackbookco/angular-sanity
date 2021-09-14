@@ -1,15 +1,21 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { StripeError } from '@stripe/stripe-js';
-import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
+import {
+  debounceTime,
+  map,
+  shareReplay,
+  switchMap,
+  takeUntil,
+} from 'rxjs/operators';
 import { BooksQuery } from 'src/app/books/state/books.query';
 import { StripeCard } from 'stripe-angular';
 import { CartQuery } from '../../state/cart.query';
 import { CartStore } from '../../state/cart.store';
 import { Customer } from 'src/app/models/Customer';
 import { Order } from 'src/app/models/Order';
-import { combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { Book } from 'src/app/books/state/book.model';
 import { CartService } from '../../state/cart.service';
 
@@ -18,12 +24,12 @@ import { CartService } from '../../state/cart.service';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
 })
-export class CartComponent {
+export class CartComponent implements OnDestroy, OnInit {
   @ViewChild('stripeCard', { read: StripeCard }) stripeCard!: StripeCard;
   customerForm = this.fb.group({
     contact: this.fb.group({
       name: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
     }),
     address: this.fb.group({
       street: ['', Validators.required],
@@ -51,6 +57,9 @@ export class CartComponent {
   paymentSuccess = false;
   shippingRate$!: Observable<string>;
   total$!: Observable<string>;
+  submittingPayment$: Observable<boolean>;
+  private submittingPayment = new Subject<boolean>();
+  private onDestroy = new Subject();
 
   constructor(
     private fb: FormBuilder,
@@ -58,11 +67,32 @@ export class CartComponent {
     private cartService: CartService,
     private booksQuery: BooksQuery,
     private http: HttpClient
-  ) {}
+  ) {
+    this.submittingPayment$ = this.submittingPayment.asObservable();
+  }
+
+  ngOnInit() {
+    this.submittingPayment$
+      .pipe(
+        takeUntil(this.onDestroy),
+        map((loading) => {
+          if (loading === true) {
+            this.customerForm.disable();
+          } else {
+            this.customerForm.enable();
+          }
+        })
+      )
+      .subscribe();
+  }
+  ngOnDestroy() {
+    this.onDestroy.next();
+    this.onDestroy.complete();
+  }
 
   getShippingRate(event: Event) {
     event.preventDefault();
-    console.log(this.customerForm.value);
+    this.customerForm.get('address')?.disable();
     const order$ = this.cartQuery.selectEntity(CartStore.ID).pipe(
       map((cart) => {
         const bookIds = cart?.items.map((item) => item.id);
@@ -110,6 +140,7 @@ export class CartComponent {
     );
 
     this.total$ = combineLatest([this.cartTotal$, this.shippingRate$]).pipe(
+      takeUntil(this.onDestroy),
       map((values) => {
         const [cartTotal, shippingRate] = values;
         const shippingTotal = +shippingRate;
@@ -131,12 +162,12 @@ export class CartComponent {
 
   payWithCard(event: Event) {
     event.preventDefault();
+    this.submittingPayment.next(true);
     const cart = this.cartQuery.getEntity(CartStore.ID);
     const items = cart?.items.map((item) => ({
       id: item.id,
       quantity: item.quantity,
     }));
-    // const zipDestination = this.customerForm.get('address.zip')?.value;
     const order = { customer: this.customerForm.value, items };
     this.http
       .post('/.netlify/functions/createPaymentIntent', order)
@@ -151,6 +182,7 @@ export class CartComponent {
             } else {
               this.paymentSuccess = true;
             }
+            this.submittingPayment.next(false);
           });
       });
   }
