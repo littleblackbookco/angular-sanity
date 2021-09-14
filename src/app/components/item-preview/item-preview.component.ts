@@ -14,6 +14,7 @@ export class ItemPreviewComponent implements OnInit {
     caption: string;
     url: string;
     title?: string;
+    quantity?: number;
   };
 
   constructor() {}

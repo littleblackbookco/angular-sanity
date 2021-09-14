@@ -5,11 +5,14 @@
     animated: !!item.animated,
     routed: !!item.route
   }"
-  [routerLink]="item.route ?? undefined"
+  [routerLink]="item.route"
 >
   <img
     alt="{{ item.caption }}"
-    src="{{ item.url }}?h={{ item.height ?? 300 }}&w={{ item.width ?? 300 }}"
+    src="{{ item.url }}?h={{ item.height || 300 }}&w={{ item.width || 300 }}{{
+      item.quantity === 0 ? '&blur=15' : ''
+    }}"
   />
+  <div class="out-of-stock" *ngIf="item?.quantity === 0">OUT OF STOCK</div>
   <p *ngIf="item.title">{{ item.title }}</p>
 </div>
