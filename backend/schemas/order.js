@@ -16,18 +16,34 @@ export default {
       to: [{ type: 'customer' }],
     },
     {
-      name: 'books',
-      title: 'Book(s) Ordered',
+      name: 'items',
+      title: 'Items Ordered',
       type: 'array',
       of: [
         {
-          type: 'reference',
-          name: 'book',
-          title: 'Book',
-          weak: true,
-          to: [{ type: 'book' }],
+          name: 'item',
+          title: 'Item',
+          type: 'object',
+          fields: [
+            {
+              type: 'reference',
+              name: 'book',
+              title: 'Book',
+              weak: true,
+              to: [{ type: 'book' }],
+            },
+            {
+              name: 'quantity',
+              title: 'Quantity Ordered',
+              type: 'number',
+              description: 'How many of this item are in the order',
+            },
+          ],
         },
       ],
+      options: {
+        layout: 'grid',
+      },
     },
     {
       name: 'shipped',
@@ -41,6 +57,32 @@ export default {
       options: {
         dateFormat: 'DD-MM-YYYY',
       },
+    },
+    {
+      name: 'paymentId',
+      title: 'Payment ID',
+      type: 'string',
+    },
+    {
+      name: 'cartPrice',
+      title: 'Cart Price',
+      type: 'string',
+    },
+    {
+      name: 'shippingPrice',
+      title: 'Shipping Price',
+      type: 'string',
+    },
+    {
+      name: 'totalPrice',
+      title: 'Total Price',
+      type: 'string',
+    },
+    {
+      name: 'paid',
+      title: 'Has Been Paid?',
+      type: 'boolean',
+      default: false,
     },
   ],
 };
