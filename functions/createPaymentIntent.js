@@ -1,4 +1,4 @@
-import { PostalService } from './postal.service';
+const { PostalService } = require('./postal.service');
 const sanityClient = require('@sanity/client');
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
@@ -143,6 +143,7 @@ exports.handler = async (req) => {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: Math.floor((orderTotal + shippingRate) * 100),
         currency: 'usd',
+        receipt_email: customer.contact.email,
       });
       const totalPrice = orderTotal + shippingRate;
       const payment = {
