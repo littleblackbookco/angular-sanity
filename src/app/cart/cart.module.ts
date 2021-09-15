@@ -28,9 +28,7 @@ import { StateSelectorModule } from '../components/state-selector/state-selector
     ItemPreviewModule,
     StateSelectorModule,
     StripeModule.forRoot(
-      environment.production
-        ? ''
-        : 'pk_test_51JRHgjAxw5aEVPjYTdhWR0aiFvCusWRkSjTNKqOemP3nBvQyJC2bFnG91ARpQpzWqxu677O8wCs8WHIJQpQGmPjK00E2bpiMtU'
+      'pk_test_51JRHgjAxw5aEVPjYTdhWR0aiFvCusWRkSjTNKqOemP3nBvQyJC2bFnG91ARpQpzWqxu677O8wCs8WHIJQpQGmPjK00E2bpiMtU'
     ),
   ],
   exports: [CartWidgetComponent],

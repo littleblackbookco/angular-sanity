@@ -29,10 +29,11 @@ exports.PostalService = class PostalService {
   }
 
   _rateXml(pkg) {
+    // possible service values are LIBRARY or MEDIA
     return `<RateV4Request_USERID="708LITTL4773">
       <Revision>2</Revision>
       <Package_ID="0">
-        <Service>PRIORITY</Service>
+        <Service>LIBRARY</Service>
         <ZipOrigination>${this.zipOrigination}</ZipOrigination>
         <ZipDestination>${pkg.zipDestination}</ZipDestination>
         <Pounds>${pkg.pounds}</Pounds>
