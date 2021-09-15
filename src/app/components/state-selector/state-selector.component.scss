@@ -1,0 +1,25 @@
+:host {
+  &.ng-invalid {
+    input {
+      border-left: 5px solid red;
+    }
+  }
+}
+
+label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+}
+
+input {
+  display: inline-flex;
+  border: 1px solid black;
+  width: -webkit-fill-available;
+  padding-left: 0.5rem;
+  &[disabled] {
+    cursor: not-allowed;
+    // !important is needed to override inputs filled by browser autoselect
+    background-color: #ededed !important;
+  }
+}

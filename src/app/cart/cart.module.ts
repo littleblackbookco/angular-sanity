@@ -11,14 +11,22 @@ import { StripeModule } from 'stripe-angular';
 import { environment } from 'src/environments/environment';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { CartEmptyComponent } from './components/cart-empty/cart-empty.component';
+import { StateSelectorModule } from '../components/state-selector/state-selector.module';
 
 @NgModule({
-  declarations: [CartComponent, CartInputComponent, CartWidgetComponent, PaymentSuccessComponent, CartEmptyComponent],
+  declarations: [
+    CartComponent,
+    CartInputComponent,
+    CartWidgetComponent,
+    PaymentSuccessComponent,
+    CartEmptyComponent,
+  ],
   imports: [
     CommonModule,
     CartRoutingModule,
     ReactiveFormsModule,
     ItemPreviewModule,
+    StateSelectorModule,
     StripeModule.forRoot(
       environment.production
         ? ''

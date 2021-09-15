@@ -104,8 +104,9 @@
             "
           ></ng-container>
 
-          <label for="state">State: </label>
-          <input id="state" type="text" formControlName="state" />
+          <app-state-selector formControlName="state"></app-state-selector>
+          <!-- <label for="state">State: </label> -->
+          <!-- <input id="state" type="text" formControlName="state" /> -->
           <ng-container
             *ngTemplateOutlet="
               inputError;
@@ -182,6 +183,9 @@
 <ng-template #inputError let-fc="formControl">
   <div class="input-error" *ngIf="fc.errors?.required">Field is required</div>
   <div class="input-error" *ngIf="fc.errors?.email">Not a valid email</div>
+  <div class="input-error" *ngIf="fc.errors?.state && !fc.errors?.required">
+    Not a valid US state
+  </div>
 </ng-template>
 
 <ng-template #empty>

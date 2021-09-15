@@ -1,0 +1,24 @@
+<label for="{{ inputId }}">State</label>
+<input
+  #input
+  id="{{ inputId }}"
+  name="{{ inputId }}"
+  size="50"
+  autocomplete="off"
+  [attr.list]="datalistId"
+  [disabled]="disabled"
+  [value]="value"
+  (input)="onChange(input.value)"
+  (blur)="markAsTouched()"
+/>
+<datalist #datalist id="{{ datalistId }}">
+  <option
+    #option
+    *ngFor="let state of states"
+    [value]="state.value"
+    (click)="onChange(state.value)"
+    (focus)="markAsTouched()"
+  >
+    {{ state.label }}
+  </option>
+</datalist>
