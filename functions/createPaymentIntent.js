@@ -1,5 +1,5 @@
-const { PostalService } = require('../helpers/postal.service');
-const sanityClient = require('@sanity/client');
+import { PostalService } from '../helpers/postal.service';
+import sanityClient from '@sanity/client';
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
 const sanity = sanityClient({
@@ -113,7 +113,7 @@ const validateQuantity = (items, books) => {
   return isValid;
 };
 
-exports.handler = async (req) => {
+export async function handler(req) {
   try {
     /**
      * {
@@ -171,4 +171,4 @@ exports.handler = async (req) => {
       body: JSON.stringify({ error: e.message }),
     };
   }
-};
+}

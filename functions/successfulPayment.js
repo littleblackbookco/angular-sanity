@@ -1,5 +1,5 @@
-const stripe = require('stripe');
-const sanityClient = require('@sanity/client');
+import { webhooks } from 'stripe';
+import sanityClient from '@sanity/client';
 
 const sanity = sanityClient({
   projectId: process.env.SANITY_PROJECT_ID,
@@ -17,12 +17,12 @@ const getOrder = async (paymentId) => {
   return order;
 };
 
-exports.handler = async (req) => {
+export async function handler(req) {
   let event;
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_PAYMENT_SUCCESS_WEBHOOK_KEY;
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+    event = webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (e) {
     return {
       statusCode: 400,
@@ -45,4 +45,4 @@ exports.handler = async (req) => {
   }
 
   console.log(`Unhandled event type ${event.type}`);
-};
+}

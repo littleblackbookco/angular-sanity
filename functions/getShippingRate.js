@@ -1,5 +1,6 @@
-const { PostalService } = require('../helpers/postal.service');
-exports.handler = async (req) => {
+import { PostalService } from '../helpers/postal.service';
+
+export async function handler(req) {
   try {
     const order = JSON.parse(req.body);
     const shippingRate = await new Promise((resolve, reject) => {
@@ -28,4 +29,4 @@ exports.handler = async (req) => {
       body: JSON.stringify({ error: e }),
     };
   }
-};
+}
