@@ -152,6 +152,7 @@ export async function handler(req) {
         shippingPrice: shippingRate,
         totalPrice,
       };
+      console.log(customer);
       const sanityCustomer = await createCustomer(customer);
       await createOrder(sanityCustomer, items, books, payment);
       return {
