@@ -6,6 +6,8 @@
   command = "npm run start"
   functions = "./functions"
   publish = "src"
+[functions]
+  node_bundler = "esbuild"
 [[redirects]]
   from = "/*"
   to = "/index.html"
