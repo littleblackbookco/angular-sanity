@@ -12,9 +12,15 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import SanityClient from '@sanity/client';
-import { StripeModule } from 'stripe-angular';
+import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
+
 @NgModule({
-  declarations: [AppComponent, NavigationComponent, NotFoundComponent],
+  declarations: [
+    AppComponent,
+    NavigationComponent,
+    NotFoundComponent,
+    PaymentSuccessComponent,
+  ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

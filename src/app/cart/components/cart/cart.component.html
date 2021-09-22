@@ -1,5 +1,5 @@
 <ng-container *ngIf="(books$ | async)?.length; else empty">
-  <div class="row container" *ngIf="!paymentSuccess; else success">
+  <div class="row container">
     <section class="col cart">
       <h2>Cart</h2>
       <div class="row" *ngFor="let book of books$ | async">
@@ -38,9 +38,9 @@
           </svg>
         </button>
       </div>
-      <ng-container *ngIf="(cartTotal$ | async) !== 0; else empty">
-        <div class="">
-          <div class="total">Cart Total: ${{ cartTotal$ | async }}.00</div>
+      <ng-container *ngIf="(subTotal$ | async) !== 0; else empty">
+        <div>
+          <div class="total">Sub Total: ${{ subTotal$ | async }}.00</div>
           <div>Tax and shipping will be calculated when ready to checkout.</div>
           <div class="confirm-checkout col" *ngIf="!displayCheckout">
             <h3>Ready To Checkout?</h3>
@@ -55,141 +55,36 @@
 
     <section
       class="col checkout slide-in"
-      *ngIf="displayCheckout && (cartTotal$ | async) !== 0"
+      *ngIf="displayCheckout && (subTotal$ | async) !== 0"
     >
       <h2>Checkout</h2>
-      <div *ngIf="invalidError" style="color: red">
-        {{ invalidError.message }}
-      </div>
 
-      <form [formGroup]="customerForm">
-        <fieldset formGroupName="contact">
-          <legend>Contact Info</legend>
+      <app-cart-checkout-form #checkout></app-cart-checkout-form>
+      <button
+        *ngIf="!showPayment"
+        class="primary centered"
+        (click)="getShippingRate($event)"
+        [disabled]="
+          checkout.customerForm.disabled || checkout.customerForm.invalid
+        "
+      >
+        Next
+      </button>
 
-          <label for="name">Name: </label>
-          <input id="name" type="text" formControlName="name" />
-          <ng-container
-            *ngTemplateOutlet="
-              inputError;
-              context: { formControl: this.customerForm.get('contact.name') }
-            "
-          ></ng-container>
-          <label for="email">Email: </label>
-          <input id="email" type="email" formControlName="email" />
-          <ng-container
-            *ngTemplateOutlet="
-              inputError;
-              context: { formControl: this.customerForm.get('contact.email') }
-            "
-          ></ng-container>
-        </fieldset>
-        <fieldset formGroupName="address">
-          <legend>Shipping Address</legend>
+      <div *ngIf="showPayment" class="slide-in">
+        <app-cart-cost-summary
+          #costSummary
+          [order$]="order$"
+        ></app-cart-cost-summary>
 
-          <label for="street">Street: </label>
-          <input id="street" type="text" formControlName="street" />
-          <ng-container
-            *ngTemplateOutlet="
-              inputError;
-              context: { formControl: this.customerForm.get('address.street') }
-            "
-          ></ng-container>
-
-          <label for="city">City: </label>
-          <input id="city" type="text" formControlName="city" />
-          <ng-container
-            *ngTemplateOutlet="
-              inputError;
-              context: { formControl: this.customerForm.get('address.city') }
-            "
-          ></ng-container>
-
-          <app-state-selector formControlName="state"></app-state-selector>
-          <ng-container
-            *ngTemplateOutlet="
-              inputError;
-              context: { formControl: this.customerForm.get('address.state') }
-            "
-          ></ng-container>
-
-          <label for="zip">Zip Code: </label>
-          <input id="zip" type="text" formControlName="zip" />
-          <ng-container
-            *ngTemplateOutlet="
-              inputError;
-              context: { formControl: this.customerForm.get('address.zip') }
-            "
-          ></ng-container>
-        </fieldset>
-
-        <button
-          *ngIf="!(total$ | async)"
-          class="primary centered"
-          (click)="getShippingRate($event)"
-          [disabled]="this.customerForm.disabled || this.customerForm.invalid"
-        >
-          Next
-        </button>
-      </form>
-      <div *ngIf="total$ | async as total" class="slide-in card-form-container">
-        <ng-container *ngIf="shippingRate$ | async as shipping">
-          <div class="row">
-            <span class="label">Cart Total:</span>
-            <span class="amount">${{ cartTotal$ | async }}.00</span>
-          </div>
-          <div class="row">
-            <span class="label">Shipping:</span>
-            <span class="amount">${{ shipping }}</span>
-          </div>
-          <div class="row">
-            <span class="label">Total:</span>
-            <span class="amount">${{ total }}</span>
-          </div>
-        </ng-container>
-        <form [formGroup]="customerForm" (submit)="payWithCard($event)">
-          <fieldset>
-            <legend>Card Info</legend>
-            <stripe-card
-              #stripeCard
-              (catch)="onStripeError($event)"
-              [(complete)]="cardDetailsFilledOut"
-              [(invalid)]="invalidError"
-              (cardMounted)="(cardCaptureReady)"
-              (paymentMethodChange)="setPaymentMethod($event)"
-              (tokenChange)="setStripeToken($event)"
-              (sourceChange)="setStripeSource($event)"
-            ></stripe-card>
-          </fieldset>
-          <button
-            id="pay-now"
-            class="primary centered"
-            type="submit"
-            [disabled]="this.customerForm.disabled || this.customerForm.invalid"
-          >
-            Pay Now
-          </button>
-        </form>
-      </div>
-      <div class="slide-in" *ngIf="submittingPayment$ | async">
-        Submitting your payment! Please do not navigate away from this page or
-        refresh your browser.
+        <app-cart-payment-form
+          [customerForm]="checkout.customerForm"
+        ></app-cart-payment-form>
       </div>
     </section>
   </div>
 </ng-container>
 
-<ng-template #inputError let-fc="formControl">
-  <div class="input-error" *ngIf="fc.errors?.required">Field is required</div>
-  <div class="input-error" *ngIf="fc.errors?.email">Not a valid email</div>
-  <div class="input-error" *ngIf="fc.errors?.state && !fc.errors?.required">
-    Not a valid US state
-  </div>
-</ng-template>
-
 <ng-template #empty>
   <app-cart-empty></app-cart-empty>
-</ng-template>
-
-<ng-template #success>
-  <app-payment-success></app-payment-success>
 </ng-template>

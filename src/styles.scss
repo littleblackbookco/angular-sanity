@@ -29,8 +29,41 @@ a {
   cursor: pointer;
 }
 
-button:disabled {
-  cursor: not-allowed;
-  background-color: lightgray !important;
-  color: darkgray !important;
+button {
+  padding: 0.1rem 0.5rem;
+  transition-property: background-color;
+  transition-duration: 0.25s;
+  font-size: 1.15rem;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: lightgray !important;
+    color: darkgray !important;
+  }
+
+  &.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &.primary {
+    color: white;
+    background-color: rgb(10, 10, 10);
+    border: none;
+
+    &:hover {
+      background-color: rgb(60, 60, 60);
+    }
+  }
+
+  &.secondary {
+    color: rgb(10, 10, 10);
+    background-color: rgb(240, 240, 240);
+    border: none;
+
+    &:hover {
+      background-color: rgb(220, 220, 220);
+    }
+  }
 }

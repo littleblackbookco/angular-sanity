@@ -1,0 +1,43 @@
+<form [formGroup]="customerForm">
+  <fieldset formGroupName="contact">
+    <legend>Contact Info</legend>
+
+    <label for="name">Name: </label>
+    <input id="name" type="text" formControlName="name" />
+    <app-cart-form-error
+      [fc]="customerForm.get('contact.name')"
+    ></app-cart-form-error>
+
+    <label for="email">Email: </label>
+    <input id="email" type="email" formControlName="email" />
+    <app-cart-form-error
+      [fc]="customerForm.get('contact.email')"
+    ></app-cart-form-error>
+  </fieldset>
+  <fieldset formGroupName="address">
+    <legend>Shipping Address</legend>
+
+    <label for="street">Street: </label>
+    <input id="street" type="text" formControlName="street" />
+    <app-cart-form-error
+      [fc]="customerForm.get('adddress.street')"
+    ></app-cart-form-error>
+
+    <label for="city">City: </label>
+    <input id="city" type="text" formControlName="city" />
+    <app-cart-form-error
+      [fc]="customerForm.get('address.city')"
+    ></app-cart-form-error>
+
+    <app-state-selector formControlName="state"></app-state-selector>
+    <app-cart-form-error
+      [fc]="customerForm.get('address.city')"
+    ></app-cart-form-error>
+
+    <label for="zip">Zip Code: </label>
+    <input id="zip" type="text" formControlName="zip" />
+    <app-cart-form-error
+      [fc]="customerForm.get('address.zip')"
+    ></app-cart-form-error>
+  </fieldset>
+</form>

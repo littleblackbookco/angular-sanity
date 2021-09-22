@@ -1,0 +1,24 @@
+<form [formGroup]="customerForm" (submit)="payWithCard($event)">
+  <fieldset>
+    <legend>Card Info</legend>
+    <stripe-card
+      #stripeCard
+      (catch)="onStripeError($event)"
+      (paymentMethodChange)="setPaymentMethod($event)"
+      (tokenChange)="setStripeToken($event)"
+      (sourceChange)="setStripeSource($event)"
+    ></stripe-card>
+  </fieldset>
+  <button
+    id="pay-now"
+    class="primary centered"
+    type="submit"
+    [disabled]="customerForm.disabled || customerForm.invalid"
+  >
+    Pay Now
+  </button>
+</form>
+<div class="slide-in" *ngIf="submittingPayment$ | async">
+  Submitting your payment! Please do not navigate away from this page or refresh
+  your browser.
+</div>

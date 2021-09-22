@@ -8,18 +8,23 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CartWidgetComponent } from './components/cart-widget/cart-widget.component';
 import { ItemPreviewModule } from '../components/item-preview/item-preview.module';
 import { StripeModule } from 'stripe-angular';
-import { environment } from 'src/environments/environment';
-import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { CartEmptyComponent } from './components/cart-empty/cart-empty.component';
 import { StateSelectorModule } from '../components/state-selector/state-selector.module';
+import { CartCheckoutFormComponent } from './components/cart-checkout-form/cart-checkout-form.component';
+import { CartPaymentFormComponent } from './components/cart-payment-form/cart-payment-form.component';
+import { CartFormErrorComponent } from './components/cart-form-error/cart-form-error.component';
+import { CartCostSummaryComponent } from './components/cart-cost-summary/cart-cost-summary.component';
 
 @NgModule({
   declarations: [
     CartComponent,
     CartInputComponent,
     CartWidgetComponent,
-    PaymentSuccessComponent,
     CartEmptyComponent,
+    CartCheckoutFormComponent,
+    CartPaymentFormComponent,
+    CartFormErrorComponent,
+    CartCostSummaryComponent,
   ],
   imports: [
     CommonModule,
