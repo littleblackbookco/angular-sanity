@@ -1,4 +1,4 @@
-const { PostalService } = require('./postal-service');
+const { PostalService } = require('../helpers/postal.service');
 const sanityClient = require('@sanity/client');
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
