@@ -1,4 +1,4 @@
-const { PostalService } = require('./postal.service');
+const { PostalService } = require('./postal-service');
 exports.handler = async (req) => {
   try {
     const order = JSON.parse(req.body);
