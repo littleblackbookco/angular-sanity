@@ -44,7 +44,7 @@ const getFromSanity = async (order) => {
 
 const createCustomer = async (customerData) => {
   const customer = {
-    _id: customerData.contact.email.replaceAll('@', '-').replaceAll('.', '-'),
+    _id: customerData.contact.email.replace('@', '-').replace(/\./g, '-'),
     _type: 'customer',
     name: customerData.contact.name,
     email: customerData.contact.email,
@@ -152,7 +152,6 @@ export async function handler(req) {
         shippingPrice: shippingRate,
         totalPrice,
       };
-      console.log(customer);
       const sanityCustomer = await createCustomer(customer);
       await createOrder(sanityCustomer, items, books, payment);
       return {
