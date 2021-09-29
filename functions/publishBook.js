@@ -1,5 +1,5 @@
 require('dotenv').config();
-import Stripe from 'stripe';
+const Stripe = require('stripe');
 
 function getPackageDimensions(book) {
   const { width, height, length, pounds, ounces } = book;
@@ -58,7 +58,7 @@ async function createBookProduct(stripe, draftedBook) {
   return [book, price];
 }
 
-export async function handler(req) {
+exports.handler = async (req) => {
   const response = setupResponse();
   const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
   const draftedBook = JSON.parse(req.body);
@@ -83,4 +83,4 @@ export async function handler(req) {
     response.body = JSON.stringify({ error: e.message });
     return response;
   }
-}
+};

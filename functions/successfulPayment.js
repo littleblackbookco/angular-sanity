@@ -1,5 +1,5 @@
-import { webhooks } from 'stripe';
-import sanityClient from '@sanity/client';
+const { webhooks } = require('stripe');
+const sanityClient = require('@sanity/client');
 
 const sanity = sanityClient({
   projectId: process.env.SANITY_PROJECT_ID,
@@ -17,7 +17,7 @@ const getOrder = async (paymentId) => {
   return order;
 };
 
-export async function handler(req) {
+exports.handler = async (req) => {
   let event;
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_PAYMENT_SUCCESS_WEBHOOK_KEY;
@@ -34,6 +34,7 @@ export async function handler(req) {
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object;
     const paymentId = paymentIntent.id;
+    console.log(paymentId);
     const order = await getOrder(paymentId);
     await sanity.patch(order._id).set({ paid: true }).commit();
     order.items.forEach((item) =>
@@ -45,4 +46,4 @@ export async function handler(req) {
   }
 
   console.log(`Unhandled event type ${event.type}`);
-}
+};
