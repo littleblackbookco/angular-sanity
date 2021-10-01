@@ -34,7 +34,6 @@ exports.handler = async (req) => {
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object;
     const paymentId = paymentIntent.id;
-    console.log(paymentId);
     const order = await getOrder(paymentId);
     await sanity.patch(order._id).set({ paid: true }).commit();
     order.items.forEach((item) =>

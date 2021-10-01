@@ -1,4 +1,4 @@
-const { getTraversalObj, convertToJson } = require('fast-xml-parser');
+const parser = require('fast-xml-parser');
 const { fetch } = require('node-fetch');
 const { stringify } = require('querystring');
 
@@ -88,8 +88,8 @@ exports.PostalService = class {
     const options = {
       arrayMode: false,
     };
-    const tObj = getTraversalObj(xml, options);
-    const rateResponse = convertToJson(tObj, options);
+    const tObj = parser.getTraversalObj(xml, options);
+    const rateResponse = parser.convertToJson(tObj, options);
     return rateResponse;
   }
 };
