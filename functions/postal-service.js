@@ -31,9 +31,13 @@ exports.PostalService = class {
         'uspsObj.RateV4Response.Package.Postage: ',
         uspsObj.RateV4Response.Package.Postage
       );
+      console.log(
+        'LOG uspsObj.RateV4Response.Package.Postage[0]: ',
+        uspsObj.RateV4Response.Package.Postage[0]
+      );
       console.dir(
-        'uspsObj.RateV4Response.Package.Postage.Rate: ',
-        uspsObj.RateV4Response.Package.Postage.Rate
+        'DIR uspsObj.RateV4Response.Package.Postage[0]: ',
+        uspsObj.RateV4Response.Package.Postage[0]
       );
       if (
         uspsObj &&
