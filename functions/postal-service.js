@@ -25,6 +25,8 @@ exports.PostalService = class {
       const uspsObj = this._xmlToObj(buffer.join(''));
       let shippingRate;
       // netlify functions do not support elvis operator
+      console.log('uspsObj');
+      console.dir(uspsObj);
       if (
         uspsObj &&
         uspsObj.RateV4Response &&
@@ -33,6 +35,7 @@ exports.PostalService = class {
       ) {
         shippingRate = uspsObj.RateV4Response.Package.Postage.Rate;
       }
+      console.log('shippingRate INSIDE: ', shippingRate);
       return cb(shippingRate);
     });
   }
