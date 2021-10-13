@@ -1,6 +1,6 @@
 const parser = require('fast-xml-parser');
 const fetch = require('node-fetch');
-const { stringify } = require('querystring');
+const qs = require('querystring');
 
 exports.PostalService = class {
   url = 'https://secure.shippingapis.com/ShippingAPI.dll';
@@ -12,7 +12,7 @@ exports.PostalService = class {
   async getShippingRate(order, cb) {
     const pkg = this._orderToPackage(order);
     const xml = this._rateXml(pkg).trim();
-    const params = stringify({ API: 'RateV4', XML: xml });
+    const params = qs.stringify({ API: 'RateV4', XML: xml });
 
     const response = await fetch(`${this.url}?${params}`, {
       responseType: 'text',

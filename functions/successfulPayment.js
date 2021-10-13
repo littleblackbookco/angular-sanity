@@ -1,4 +1,4 @@
-const { webhooks } = require('stripe');
+const stripe = require('stripe');
 const sanityClient = require('@sanity/client');
 
 const sanity = sanityClient({
@@ -22,7 +22,7 @@ exports.handler = async (req) => {
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_PAYMENT_SUCCESS_WEBHOOK_KEY;
   try {
-    event = webhooks.constructEvent(req.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (e) {
     return {
       statusCode: 400,
