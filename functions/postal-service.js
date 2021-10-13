@@ -27,12 +27,28 @@ exports.PostalService = class {
       // netlify functions do not support elvis operator
       console.log('uspsObj');
       console.dir(uspsObj);
+      console.dir(
+        'uspsObj.RateV4Response.Package.Postage: ',
+        uspsObj.RateV4Response.Package.Postage
+      );
+      console.dir(
+        'uspsObj.RateV4Response.Package.Postage.Rate: ',
+        uspsObj.RateV4Response.Package.Postage.Rate
+      );
       if (
         uspsObj &&
         uspsObj.RateV4Response &&
         uspsObj.RateV4Response.Postage &&
         uspsObj.RateV4Response.Postage.Rate
       ) {
+        console.dir(
+          'uspsObj.RateV4Response.Package.Postage: ',
+          uspsObj.RateV4Response.Package.Postage
+        );
+        console.dir(
+          'uspsObj.RateV4Response.Package.Postage.Rate: ',
+          uspsObj.RateV4Response.Package.Postage.Rate
+        );
         shippingRate = uspsObj.RateV4Response.Package.Postage.Rate;
       }
       console.log('shippingRate INSIDE: ', shippingRate);
