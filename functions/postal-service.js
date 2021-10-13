@@ -23,7 +23,16 @@ exports.PostalService = class {
     });
     response.body.on('end', () => {
       const uspsObj = this._xmlToObj(buffer.join(''));
-      const shippingRate = uspsObj?.RateV4Response?.Package?.Postage?.Rate;
+      let shippingRate;
+      // netlify functions do not support elvis operator
+      if (
+        uspsObj &&
+        uspsObj.RateV4Response &&
+        uspsObj.RateV4Response.Postage &&
+        uspsObj.RateV4Response.Postage.Rate
+      ) {
+        shippingRate = uspsObj.RateV4Response.Package.Postage.Rate;
+      }
       return cb(shippingRate);
     });
   }
