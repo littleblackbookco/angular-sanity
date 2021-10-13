@@ -25,37 +25,14 @@ exports.PostalService = class {
       const uspsObj = this._xmlToObj(buffer.join(''));
       let shippingRate;
       // netlify functions do not support elvis operator
-      console.log('uspsObj');
-      console.dir(uspsObj);
-      console.dir(
-        'uspsObj.RateV4Response.Package.Postage: ',
-        uspsObj.RateV4Response.Package.Postage
-      );
-      console.log(
-        'LOG uspsObj.RateV4Response.Package.Postage[0]: ',
-        uspsObj.RateV4Response.Package.Postage[0]
-      );
-      console.dir(
-        'DIR uspsObj.RateV4Response.Package.Postage[0]: ',
-        uspsObj.RateV4Response.Package.Postage[0]
-      );
 
-      const postage = uspsObj.RateV4Response.Package.Postage;
-      console.log('postage', postage);
       if (
         uspsObj &&
         uspsObj.RateV4Response &&
-        uspsObj.RateV4Response.Postage &&
-        uspsObj.RateV4Response.Postage.Rate
+        uspsObj.RateV4Response.Package &&
+        uspsObj.RateV4Response.Package.Postage &&
+        uspsObj.RateV4Response.Package.Postage.Rate
       ) {
-        console.dir(
-          'uspsObj.RateV4Response.Package.Postage: ',
-          uspsObj.RateV4Response.Package.Postage
-        );
-        console.dir(
-          'uspsObj.RateV4Response.Package.Postage.Rate: ',
-          uspsObj.RateV4Response.Package.Postage.Rate
-        );
         shippingRate = uspsObj.RateV4Response.Package.Postage.Rate;
       }
       console.log('shippingRate INSIDE: ', shippingRate);
