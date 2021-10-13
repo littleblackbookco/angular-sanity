@@ -36,9 +36,13 @@ exports.handler = async (req) => {
     const paymentId = paymentIntent.id;
     const order = await getOrder(paymentId);
     await sanity.patch(order._id).set({ paid: true }).commit();
-    order.items.forEach((item) =>
-      sanity.patch(item.book._key).dec({ quantity: item.quantity }).commit()
-    );
+    // change forEach to for loop
+    for (const item of order.items) {
+      await sanity
+        .patch(item.book._key)
+        .dec({ quantity: item.quantity })
+        .commit();
+    }
     return {
       statusCode: 200,
     };

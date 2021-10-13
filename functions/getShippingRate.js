@@ -17,7 +17,6 @@ exports.handler = async (req) => {
         reject(e.message);
       }
     });
-    console.log('shippingRate OUTSIDE: ', shippingRate);
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
