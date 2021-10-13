@@ -1,5 +1,5 @@
 const parser = require('fast-xml-parser');
-const { fetch } = require('node-fetch');
+const fetch = require('node-fetch');
 const { stringify } = require('querystring');
 
 exports.PostalService = class {
