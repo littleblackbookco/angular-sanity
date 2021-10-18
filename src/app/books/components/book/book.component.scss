@@ -6,9 +6,9 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
 }
 
 .header {
-  margin-bottom: 1rem;
-  border-left: $dark-gray 3px solid;
-  padding-left: 1rem;
+  padding: 0 1rem;
+  background-color: rgb(10, 10, 10);
+  color: white;
 }
 
 .row {
@@ -24,17 +24,11 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
 }
 
 .top-row {
-  // align-items: center;
+  margin-bottom: 2rem;
   .title {
-    // flex: 0;
     font-size: 2.5rem;
-    // margin-bottom: 1rem;
-    // border-left: hsla(10, 10, 10, 0.7) 3px solid;
-    // padding-left: 1rem;
-    // display: inline-block;
   }
   .tag-container {
-    // flex: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -42,7 +36,6 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
     .tag {
       font-size: 1.25rem;
       margin: 0 0.25rem;
-      // padding-bottom: 1rem;
     }
   }
   button {
@@ -53,20 +46,22 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
 .main-content {
   justify-content: space-between;
   gap: 4rem;
+  div {
+    background-color: white;
+  }
 
   .carousel-container {
     flex: 1;
     height: 800px;
     width: 800px;
-    background-color: $light-gray;
   }
 
   div.info {
     max-width: 100%;
     flex: 1;
-    box-shadow: 0 0 25px -15px $dark-gray;
+    border: 1px solid black;
+    box-shadow: 5px 5px 0px 0px rgb(10, 10, 10);
     padding: 1rem;
-    border-radius: 10px;
     &.col {
       gap: 2rem;
       justify-content: space-between;
@@ -78,17 +73,17 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
 
   dl.info {
     margin-bottom: 2rem;
-
+    border: 2px solid black;
     div {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      border-bottom: $dark-gray 1px dotted;
       padding: 0 0.5rem;
     }
-    div:nth-child(odd) {
-      background-color: $light-gray;
+    div:nth-child(even) {
+      background-color: rgb(50, 50, 50);
+      color: white;
     }
     dt,
     dd {
@@ -98,6 +93,8 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
 
   pre.description {
     white-space: break-spaces;
+    border: 2px solid black;
+    padding: 0.5rem;
   }
 }
 

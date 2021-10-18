@@ -17,9 +17,7 @@ button.quantity {
   max-height: 2rem;
   flex: 0 1 auto;
   margin-top: 22px;
-  border: none;
-  border-radius: 25%;
-  background-color: rgb(20, 20, 20);
+
   svg {
     padding-top: 25%;
   }
@@ -27,7 +25,6 @@ button.quantity {
 
 input.quantity {
   height: 100%;
-  border-radius: 5px;
   border: 1px solid black;
   font-size: 1.25rem;
 }

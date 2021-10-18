@@ -15,8 +15,7 @@ label {
 input {
   display: inline-flex;
   border: 1px solid black;
-  width: -webkit-fill-available;
-  padding-left: 0.5rem;
+  width: 100%;
   &[disabled] {
     cursor: not-allowed;
     // !important is needed to override inputs filled by browser autoselect

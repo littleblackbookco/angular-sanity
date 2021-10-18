@@ -1,7 +1,7 @@
 <div class="row">
   <button
     #minus
-    class="quantity minus"
+    class="quantity minus primary"
     (click)="decrease()"
     [disabled]="input.value === 0"
   >
@@ -37,7 +37,7 @@
   </div>
   <button
     #plus
-    class="quantity plus"
+    class="quantity plus primary"
     (click)="increase()"
     [disabled]="input.value === quantity"
   >

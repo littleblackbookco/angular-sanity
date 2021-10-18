@@ -6,10 +6,11 @@ import { SetShippingAction } from './SetShippingAction';
 
 export default function resolveDocumentActions(props) {
   return [
-    ...defaultResolve(props).map((Action) =>
-      props.type === 'book' && Action === PublishAction
-        ? PublishBookAction
-        : Action
+    ...defaultResolve(props).map(
+      (Action) => Action
+      // props.type === 'book' && Action === PublishAction
+      //   ? PublishBookAction
+      //   : Action
     ),
     SetShippingAction,
   ];

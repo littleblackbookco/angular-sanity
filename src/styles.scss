@@ -31,14 +31,18 @@ a {
 
 button {
   padding: 0.1rem 0.5rem;
-  transition-property: background-color;
-  transition-duration: 0.25s;
+  transition: background-color 0.25s, box-shadow 0.35s;
   font-size: 1.15rem;
+  border: none;
 
   &:disabled {
     cursor: not-allowed;
     background-color: lightgray !important;
     color: darkgray !important;
+  }
+
+  &:hover {
+    box-shadow: none !important;
   }
 
   &.centered {
@@ -55,15 +59,22 @@ button {
     &:hover {
       background-color: rgb(60, 60, 60);
     }
+
+    &:not(:disabled) {
+      box-shadow: 3px 3px 0px 0px rgb(200, 200, 200);
+    }
   }
 
   &.secondary {
     color: rgb(10, 10, 10);
-    background-color: rgb(240, 240, 240);
+    background-color: white;
     border: none;
 
     &:hover {
       background-color: rgb(220, 220, 220);
+    }
+    &:not(:disabled) {
+      box-shadow: 3px 3px 0px 0px rgb(10, 10, 10);
     }
   }
 }

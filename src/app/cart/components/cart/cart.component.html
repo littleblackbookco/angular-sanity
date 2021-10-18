@@ -1,7 +1,7 @@
 <ng-container *ngIf="(books$ | async)?.length; else empty">
   <div class="row container">
     <section class="col cart">
-      <h2>Cart</h2>
+      <h2 class="title">Cart</h2>
       <div class="row" *ngFor="let book of books$ | async">
         <app-item-preview
           class="cell"
@@ -16,70 +16,79 @@
         <div class="row cell">
           <span class="cell title">{{ book.title }}</span>
           <span class="cell price">${{ book.price }}.00</span>
-        </div>
-        <app-cart-input
-          class="cell quantity"
-          [itemId]="book.slug"
-          [quantity]="book.quantity"
-          [autoUpdateCart]="true"
-        ></app-cart-input>
-        <button class="cell delete" (click)="removeFromCart(book)">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 0 24 24"
-            width="24px"
-            fill="#FFF"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path
-              d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"
-            />
-          </svg>
-        </button>
-      </div>
-      <ng-container *ngIf="(subTotal$ | async) !== 0; else empty">
-        <div>
-          <div class="total">Sub Total: ${{ subTotal$ | async }}.00</div>
-          <div>Tax and shipping will be calculated when ready to checkout.</div>
-          <div class="confirm-checkout col" *ngIf="!displayCheckout">
-            <h3>Ready To Checkout?</h3>
-            <button class="primary" (click)="showCheckout()">Yes!</button>
-            <button class="secondary" routerLink="/books">
-              No, View More Books
+          <div class="controls">
+            <app-cart-input
+              class="cell quantity"
+              [itemId]="book.slug"
+              [quantity]="book.quantity"
+              [autoUpdateCart]="true"
+            ></app-cart-input>
+            <button class="cell delete primary" (click)="removeFromCart(book)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 0 24 24"
+                width="24px"
+                fill="#FFF"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path
+                  d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"
+                />
+              </svg>
             </button>
           </div>
         </div>
-      </ng-container>
+      </div>
+      <footer class="cart-footer">
+        <span>Cart Total:</span>
+        <span>${{ subTotal$ | async }}.00</span>
+      </footer>
     </section>
+    <ng-container *ngIf="(subTotal$ | async) !== 0; else empty">
+      <div class="confirm-checkout col" *ngIf="!displayCheckout">
+        <h3>Ready To Checkout?</h3>
+        <button class="primary" (click)="showCheckout()">Yes!</button>
+        <button class="secondary" routerLink="/books">
+          No, View More Books
+        </button>
+      </div>
+    </ng-container>
 
     <section
       class="col checkout slide-in"
       *ngIf="displayCheckout && (subTotal$ | async) !== 0"
     >
-      <h2>Checkout</h2>
+      <h2 class="title">Checkout</h2>
 
-      <app-cart-checkout-form #checkout></app-cart-checkout-form>
-      <button
-        *ngIf="!showPayment"
-        class="primary centered"
-        (click)="getShippingRate($event)"
-        [disabled]="
-          checkout.customerForm.disabled || checkout.customerForm.invalid
-        "
-      >
-        Next
-      </button>
+      <div class="checkout-content">
+        <app-cart-checkout-form
+          #checkout
+          class="checkout-form"
+        ></app-cart-checkout-form>
+        <button
+          *ngIf="!showPayment"
+          class="primary centered"
+          (click)="getShippingRate($event)"
+          [disabled]="
+            checkout.customerForm.disabled || checkout.customerForm.invalid
+          "
+        >
+          Next
+        </button>
 
-      <div *ngIf="showPayment" class="slide-in">
-        <app-cart-cost-summary
-          #costSummary
-          [order$]="order$"
-        ></app-cart-cost-summary>
+        <div *ngIf="showPayment" class="slide-in">
+          <app-cart-cost-summary
+            #costSummary
+            [order$]="order$"
+            class="checkout-form"
+          ></app-cart-cost-summary>
 
-        <app-cart-payment-form
-          [customerForm]="checkout.customerForm"
-        ></app-cart-payment-form>
+          <app-cart-payment-form
+            class="checkout-form"
+            [customerForm]="checkout.customerForm"
+          ></app-cart-payment-form>
+        </div>
       </div>
     </section>
   </div>

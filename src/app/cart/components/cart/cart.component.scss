@@ -1,23 +1,67 @@
 $light-gray: hsla(0%, 0%, 0%, 0.1);
 .container {
-  justify-content: space-between;
-  gap: 15%;
+  justify-content: space-around;
+  gap: 2rem;
 }
 
-.cart {
+h2.title {
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.cart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(10, 10, 10);
+  color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.title {
+  background-color: rgb(10, 10, 10);
+  color: white;
+}
+
+.col {
+  background-color: white;
+  height: auto;
+  max-width: 700px;
   flex: 1 1 500px;
-  height: 100%;
+}
+.cart {
+  // flex: 1 1 500px;
+  margin: 0 -0.5rem;
+  position: relative;
+  // height: 100%;
+  .controls {
+    // padding: 0 !important;
+    padding-bottom: 2rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex: 1 0 0;
+  }
   .row {
-    @media (max-width: 492px) {
-      padding-bottom: 5rem;
-    }
+    // @media (max-width: 492px) {
+    //   padding-bottom: 5rem;
+    // }
+    align-self: center;
+    max-width: 315px;
+    margin: 0 -0.5rem;
     min-height: 7rem;
-    padding: 1rem;
+    // padding: 1rem;
     justify-content: space-between;
     align-items: center;
 
     app-item-preview {
-      max-width: 100px;
+      max-width: fit-content;
+      margin-top: 2rem;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 0.5rem;
     }
 
     span {
@@ -26,15 +70,20 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
     .cell {
       &.row {
         min-height: 0;
-        flex: 1 0 0%;
-        height: 100%;
-        padding: 22px 0 0 0;
-        min-width: 9rem;
+        flex: 1 1 0%;
+        padding: 0 0.25rem;
+        // max-width: max-content;
+        min-width: fit-content;
+        // height: 100%;
+
+        // padding: 22px 0 0 0;
+        // min-width: clamp(fit-content, 9em, 100%);
         span {
+          flex: 1 1 100%;
           white-space: nowrap;
           padding: 0.25rem 0;
-          margin: 0 1rem;
-          border-bottom: 1px dotted hsla(0%, 0%, 0%, 0.2);
+          margin: 0 2rem;
+          // border-bottom: 1px dotted hsla(0%, 0%, 0%, 0.2);
         }
       }
       flex: 1 0 auto;
@@ -42,26 +91,30 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
       &.delete {
         border: none;
         max-height: 2rem;
-        margin-top: 22px;
-        margin-left: 1rem;
-        border-radius: 25%;
-        background-color: rgb(180, 20, 20);
+        // margin-top: 22px;
+        // margin-left: 1rem;
+        background-color: rgb(220, 0, 0) !important;
         flex: 0 0 auto;
+        align-self: end;
         svg {
           padding-top: 20%;
         }
       }
     }
+
     app-cart-input {
-      flex: 1 0 auto;
+      flex: 0 0 0 !important;
       max-width: 10rem;
-      @media (max-width: 40em) {
-        max-width: initial;
-        margin: 0 auto;
-      }
+      // @media (max-width: 40em) {
+      //   max-width: initial;
+      //   margin: 0 auto;
+      // }
     }
     &:nth-child(odd) {
       background-color: $light-gray;
+    }
+    &:last-of-type {
+      margin-bottom: 2rem;
     }
   }
 
@@ -93,13 +146,24 @@ $light-gray: hsla(0%, 0%, 0%, 0.1);
 
 .checkout {
   flex: 1;
+  max-width: 100%;
 }
 
+.checkout-content {
+  padding: 0 1rem;
+  max-width: fill-available;
+}
 .confirm-checkout {
+  justify-content: center;
+  background-color: unset;
   margin: 3rem 0;
   align-content: center;
   gap: 1rem;
   h3 {
+    text-align: center;
     font-size: 1.5rem;
   }
 }
+// .checkout-form {
+//   margin: 0 1rem;
+// }
